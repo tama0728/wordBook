@@ -2,12 +2,14 @@ import pygame
 from pygame.locals import *
 from LoginModel import Model
 from RegisterView import RegisterView
+from Popup import Popup
 
 
 class RegisterController:
     def __init__(self):
         self.model = Model()
         self.view = RegisterView()
+        self.popup = Popup()
 
     def run(self):
         clock = pygame.time.Clock()
@@ -54,6 +56,7 @@ class RegisterController:
                             done = True  # 회원가입 성공 후 종료
                         else:
                             print("회원가입 실패")
+                            self.popup.show("회원가입 실패")
 
             self.view.screen.fill((255, 255, 255))
 
@@ -70,6 +73,8 @@ class RegisterController:
 
             self.view.draw_text(username, input_box1, 'left_in')
             self.view.draw_text(password, input_box2, 'left_in')
+
+            self.popup.draw(self.view.screen)
 
             pygame.display.flip()
             clock.tick(30)

@@ -3,12 +3,14 @@ from pygame.locals import *
 from LoginModel import Model
 from view import View
 from RegisterController import RegisterController
+from Popup import Popup
 
 
 class Controller:
     def __init__(self):
         self.model = Model()
         self.view = View()
+        self.popup = Popup()
 
     def run(self):
         clock = pygame.time.Clock()
@@ -41,10 +43,10 @@ class Controller:
                         elif event.key == K_RETURN:
                             if self.model.login(username, password):
                                 print("로그인 성공")
-                                self.view.show_popup("로그인 성공")
+                                self.popup.show("로그인 성공")
                             else:
                                 print("로그인 실패")
-                                self.view.show_popup("로그인 실패")
+                                self.popup.show("로그인 실패")
                             username = ''
                             password = ''
                         else:
@@ -61,16 +63,16 @@ class Controller:
                     elif login_button.collidepoint(event.pos):
                         if self.model.login(username, password):
                             print("로그인 성공")
-                            self.view.show_popup("로그인 성공")
+                            self.popup.show("로그인 성공")
                         else:
                             print("로그인 실패")
-                            self.view.show_popup("로그인 실패")
-
+                            self.popup.show("로그인 실패")
                         username = ''
                         password = ''
                     elif self.view.register_button.collidepoint(event.pos):  # 회원가입 버튼 클릭 처리
                         register_controller = RegisterController()
                         register_controller.run()
+                        self.popup.show("회원가입 성공")
                         pygame.display.set_caption("로그인")
                         self.view.screen.fill((255, 255, 255))  # 다시 로그인 화면으로 돌아올 때 화면 초기화
 
@@ -91,7 +93,8 @@ class Controller:
             self.view.draw_text(password, input_box2, 'left_in')
             self.view.draw_register_button()  # 회원가입 버튼 그리기
 
-            self.view.draw_popup()  # 팝업 메시지 그리기
+            # self.view.draw_popup()  # 팝업 메시지 그리기
+            self.popup.draw(self.view.screen)  # 팝업 메시지 그리기
 
             pygame.display.flip()
             clock.tick(30)
