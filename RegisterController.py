@@ -1,17 +1,20 @@
 import pygame
 from pygame.locals import *
-from LoginModel import Model
+from RegisterModel import RegisterModel
 from RegisterView import RegisterView
 from Popup import Popup
 
 
 class RegisterController:
     def __init__(self):
-        self.model = Model()
+        self.model = RegisterModel()
+        self.registered = None
         self.view = RegisterView()
         self.popup = Popup()
 
     def run(self):
+        self.registered = False
+        self.model = RegisterModel()
         clock = pygame.time.Clock()
         username = ''
         password = ''
@@ -39,6 +42,14 @@ class RegisterController:
                                 username = username[:-1]
                             elif active == 1:
                                 password = password[:-1]
+                        elif event.key == K_RETURN:
+                            if self.model.register(username, password):
+                                print("회원가입 성공")
+                                self.registered = True
+                                done = True
+                            else:
+                                print("회원가입 실패")
+                                self.popup.show("회원가입 실패")
                         else:
                             if active == 0:
                                 username += event.unicode
@@ -53,7 +64,8 @@ class RegisterController:
                     elif register_button.collidepoint(event.pos):
                         if self.model.register(username, password):
                             print("회원가입 성공")
-                            done = True  # 회원가입 성공 후 종료
+                            self.registered = True
+                            done = True
                         else:
                             print("회원가입 실패")
                             self.popup.show("회원가입 실패")

@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from LoginModel import Model
+from LoginModel import LoginModel
 from view import View
 from RegisterController import RegisterController
 from Popup import Popup
@@ -8,9 +8,10 @@ from Popup import Popup
 
 class Controller:
     def __init__(self):
-        self.model = Model()
+        self.model = LoginModel()
         self.view = View()
         self.popup = Popup()
+        self.register_controller = RegisterController()
 
     def run(self):
         clock = pygame.time.Clock()
@@ -21,7 +22,7 @@ class Controller:
         color_inactive = pygame.Color('lightskyblue3')
         color_active = pygame.Color('dodgerblue2')
         color = color_inactive
-        active = None
+        active = 0
 
         login_button = pygame.Rect(200, 320, 130, 50)
 
@@ -42,6 +43,7 @@ class Controller:
                                 password = password[:-1]
                         elif event.key == K_RETURN:
                             if self.model.login(username, password):
+                                self.model = LoginModel()
                                 print("로그인 성공")
                                 self.popup.show("로그인 성공")
                             else:
@@ -70,10 +72,13 @@ class Controller:
                         username = ''
                         password = ''
                     elif self.view.register_button.collidepoint(event.pos):  # 회원가입 버튼 클릭 처리
-                        register_controller = RegisterController()
-                        register_controller.run()
-                        self.popup.show("회원가입 성공")
+                        self.popup.hide()
+                        self.register_controller.run()
+                        if self.register_controller.registered:
+                            print("회원가입 성공")
+                            self.popup.show("회원가입 성공")
                         pygame.display.set_caption("로그인")
+                        active = 0
                         self.view.screen.fill((255, 255, 255))  # 다시 로그인 화면으로 돌아올 때 화면 초기화
 
             self.view.screen.fill((255, 255, 255))

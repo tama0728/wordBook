@@ -10,7 +10,6 @@ class RegisterView:
         self.font = pygame.font.SysFont("d2coding", 32)
         self.text_color = pygame.Color('black')
 
-
     def draw_text(self, text, rect, where='center'):
         text_surface = self.font.render(text, True, self.text_color)
         text_rect = text_surface.get_rect()
