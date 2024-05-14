@@ -13,6 +13,7 @@ class RegisterController:
         self.popup = Popup()
 
     def run(self):
+        pygame.display.set_caption("회원가입")
         self.registered = False
         self.model = RegisterModel()
         clock = pygame.time.Clock()

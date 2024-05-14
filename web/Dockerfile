@@ -17,7 +17,7 @@ COPY ./certs/privkey.pem /etc/ssl/private/
 COPY ./certs/chain.pem /etc/ssl/certs/
 
 # Copy current directory contents into the container at /app
-COPY .. .
+COPY ../.. .
 
 # 환경변수 설정 (Flask 실행을 위한 환경변수)
 ENV FLASK_APP=app.py

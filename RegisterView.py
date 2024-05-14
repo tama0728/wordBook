@@ -6,7 +6,6 @@ class RegisterView:
         pygame.init()
         self.WIDTH, self.HEIGHT = 640, 480
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
-        pygame.display.set_caption("회원가입")
         self.font = pygame.font.SysFont("d2coding", 32)
         self.text_color = pygame.Color('black')
 
