@@ -14,7 +14,6 @@ class AdminController:
 
     def run(self):
         clock = pygame.time.Clock()
-        self.popup.show("로그인 성공")
         add_button = Button(100, 100, 100, 50, "추가")
         del_button = Button(100, 200, 100, 50, "삭제")
         edit_button = Button(100, 300, 100, 50, "수정")
@@ -26,6 +25,7 @@ class AdminController:
         edit_button.draw(self.view.screen)
 
         self.popup.draw(self.view.screen)
+
         pygame.display.flip()
         clock.tick(30)
 
@@ -41,4 +41,5 @@ class AdminController:
                         print("삭제 버튼 클릭")
                     elif edit_button.is_clicked(event.pos):
                         print("수정 버튼 클릭")
+
 
