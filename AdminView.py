@@ -1,11 +1,14 @@
 import pygame
 
 
-class AdminHomeView:
+class AdminView:
     def __init__(self):
-        add_button = pygame.Rect(100, 100, 100, 50)
-        del_button = pygame.Rect(100, 200, 100, 50)
-        edit_button = pygame.Rect(100, 300, 100, 50)
+        pygame.init()
+        self.WIDTH, self.HEIGHT = 640, 480
+        self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
+        pygame.display.set_caption("관리자 홈")
+        self.font = pygame.font.SysFont("d2coding", 32)
+        self.text_color = pygame.Color('black')
 
     # def run(self):
     #     done = False

@@ -4,6 +4,7 @@ from LoginModel import LoginModel
 from LoginView import LoginView
 from RegisterController import RegisterController
 from Popup import Popup
+from AdminController import AdminController
 
 
 class Controller:
@@ -29,59 +30,6 @@ class Controller:
 
         done = False
         while not done:
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    done = True
-                if event.type == KEYDOWN:
-                    if event.key == K_TAB:
-                        active += 1
-                        active %= 2
-                    elif active is not None:
-                        if event.key == K_BACKSPACE:
-                            if active == 0:
-                                username = username[:-1]
-                            elif active == 1:
-                                password = password[:-1]
-                        elif event.key == K_RETURN:
-                            if self.loginModel.login(username, password):
-                                self.loginModel = LoginModel()
-                                print("로그인 성공")
-                                self.popup.show("로그인 성공")
-                            else:
-                                print("로그인 실패")
-                                self.popup.show("로그인 실패")
-                            username = ''
-                            password = ''
-                        else:
-                            if active == 0:
-                                username += event.unicode
-                            elif active == 1:
-                                password += event.unicode
-
-                if event.type == MOUSEBUTTONDOWN:
-                    if input_box1.collidepoint(event.pos):
-                        active = 0
-                    elif input_box2.collidepoint(event.pos):
-                        active = 1
-                    elif login_button.collidepoint(event.pos):
-                        if self.loginModel.login(username, password):
-                            print("로그인 성공")
-                            self.popup.show("로그인 성공")
-                        else:
-                            print("로그인 실패")
-                            self.popup.show("로그인 실패")
-                        username = ''
-                        password = ''
-                    elif register_button.collidepoint(event.pos):  # 회원가입 버튼 클릭 처리
-                        self.popup.hide()
-                        self.register_controller.run()
-                        if self.register_controller.registered:
-                            print("회원가입 성공")
-                            self.popup.show("회원가입 성공")
-                        pygame.display.set_caption("로그인")
-                        active = 0
-                        self.loginView.screen.fill((255, 255, 255))  # 다시 로그인 화면으로 돌아올 때 화면 초기화
-
             self.loginView.screen.fill((255, 255, 255))
 
             color1 = color_active if active == 0 else color_inactive
@@ -104,3 +52,62 @@ class Controller:
 
             pygame.display.flip()
             clock.tick(30)
+
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    done = True
+                if event.type == KEYDOWN:
+                    if event.key == K_TAB:
+                        active += 1
+                        active %= 2
+                    elif active is not None:
+                        if event.key == K_BACKSPACE:
+                            if active == 0:
+                                username = username[:-1]
+                            elif active == 1:
+                                password = password[:-1]
+                        elif event.key == K_RETURN:
+                            if self.loginModel.login(username, password):
+                                self.loginModel = LoginModel()
+                                print("로그인 성공")
+                                done = True
+                                admin = AdminController()
+                                admin.run()
+                            else:
+                                print("로그인 실패")
+                                self.popup.show("로그인 실패")
+                            username = ''
+                            password = ''
+                        else:
+                            if active == 0:
+                                username += event.unicode
+                            elif active == 1:
+                                password += event.unicode
+
+                if event.type == MOUSEBUTTONDOWN:
+                    if input_box1.collidepoint(event.pos):
+                        active = 0
+                    elif input_box2.collidepoint(event.pos):
+                        active = 1
+                    elif login_button.collidepoint(event.pos):
+                        if self.loginModel.login(username, password):
+                            print("로그인 성공")
+                            self.popup.show("로그인 성공")
+                            done = True
+                            admin = AdminController()
+                            admin.run()
+                        else:
+                            print("로그인 실패")
+                            self.popup.show("로그인 실패")
+                        username = ''
+                        password = ''
+                    elif register_button.collidepoint(event.pos):  # 회원가입 버튼 클릭 처리
+                        self.popup.hide()
+                        self.register_controller.run()
+                        if self.register_controller.registered:
+                            print("회원가입 성공")
+                            self.popup.show("회원가입 성공")
+                        pygame.display.set_caption("로그인")
+                        active = 0
+                        self.loginView.screen.fill((255, 255, 255))  # 다시 로그인 화면으로 돌아올 때 화면 초기화
+
