@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 from LoginModel import LoginModel
 from View import View
+from LoginView import LoginView
 from RegisterController import RegisterController
 from Popup import Popup
 from AdminController import AdminController
@@ -14,6 +15,7 @@ class Controller:
         pygame.init()
         self.loginModel = LoginModel()
         self.view = View()
+        self.loginView = LoginView(self.view)
         self.popup = Popup()
         self.register_controller = RegisterController()
         self.done = False
@@ -23,15 +25,14 @@ class Controller:
         pygame.display.set_caption("로그인")
         username = ''
         password = ''
-        input_box1 = pygame.Rect(200, 200, 280, 32)
-        input_box2 = pygame.Rect(200, 250, 280, 32)
         color_inactive = pygame.Color('lightskyblue3')
         color_active = pygame.Color('dodgerblue2')
-        color = color_inactive
         active = 0
 
         login_button = pygame.Rect(200, 320, 130, 50)
         register_button = pygame.Rect(350, 320, 130, 50)
+        id_box = self.loginView.id_box
+        password_box = self.loginView.password_box
 
         while not self.done:
             self.view.screen.fill((255, 255, 255))
@@ -39,18 +40,16 @@ class Controller:
             color1 = color_active if active == 0 else color_inactive
             color2 = color_active if active == 1 else color_inactive
 
-            pygame.draw.rect(self.view.screen, color1, input_box1, 2)
-            pygame.draw.rect(self.view.screen, color2, input_box2, 2)
-            pygame.draw.rect(self.view.screen, color_inactive, login_button, 2)
-            pygame.draw.rect(self.view.screen, (0, 255, 0), register_button)
+            self.loginView.draw(self.view.screen)
 
-            self.view.draw_text('ID:', input_box1, 'left_out')
-            self.view.draw_text('Password:', input_box2, 'left_out')
-            self.view.draw_text('Login', login_button)
-            self.view.draw_text('Register', register_button)
+            pygame.draw.rect(self.view.screen, color1, id_box, 2)
+            pygame.draw.rect(self.view.screen, color2, password_box, 2)
 
-            self.view.draw_text(username, input_box1, 'left_in')
-            self.view.draw_text(password, input_box2, 'left_in')
+            self.view.draw_text('ID:', id_box, 'left_out')
+            self.view.draw_text('Password:', password_box, 'left_out')
+
+            self.view.draw_text(username, id_box, 'left_in')
+            self.view.draw_text(password, password_box, 'left_in')
 
             self.popup.draw(self.view.screen)  # 팝업 메시지 그리기
 
@@ -81,9 +80,9 @@ class Controller:
                                 password += event.unicode
 
                 if event.type == MOUSEBUTTONDOWN:
-                    if input_box1.collidepoint(event.pos):
+                    if id_box.collidepoint(event.pos):
                         active = 0
-                    elif input_box2.collidepoint(event.pos):
+                    elif password_box.collidepoint(event.pos):
                         active = 1
                     elif login_button.collidepoint(event.pos):
                         self.login(username, sha256(password.encode('utf-8')).hexdigest())
@@ -97,7 +96,9 @@ class Controller:
                             self.popup.show("회원가입 성공")
                         pygame.display.set_caption("로그인")
                         active = 0
-                        self.view.screen.fill((255, 255, 255))  # 다시 로그인 화면으로 돌아올 때 화면 초기화
+                if event.type == MOUSEMOTION:
+                    self.loginView.login_button.is_hover(event.pos)
+                    self.loginView.register_button.is_hover(event.pos)
 
     def login(self, username, password):
         if self.loginModel.login(username, password):
