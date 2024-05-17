@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Welcome to the English Wordbook</h1>
+    {% if session.username %}
+        <p>Hello, {{ session.username }}!</p>
+        <a href="{{ url_for('logout') }}">Logout</a>
+        <a href="{{ url_for('words') }}">View Words</a>
+    {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('register') }}">Register</a>
+    {% endif %}
+</body>
+</html>
