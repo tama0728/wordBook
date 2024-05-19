@@ -1,93 +1,81 @@
 import pygame
 from pygame.locals import *
 from RegisterModel import RegisterModel
+from RegisterView import RegisterView
 from Popup import Popup
 from View import View
+from Input import Input
+from hashlib import sha256
 
 
 class RegisterController:
     def __init__(self):
         self.model = RegisterModel()
-        self.registered = None
         self.view = View()
+        self.registerView = RegisterView(self.view)
         self.popup = Popup()
+        self.registered = False
 
     def run(self):
         pygame.display.set_caption("회원가입")
         self.registered = False
-        self.model = RegisterModel()
         clock = pygame.time.Clock()
-        username = ''
-        password = ''
-        input_box1 = pygame.Rect(200, 200, 280, 32)
-        input_box2 = pygame.Rect(200, 250, 280, 32)
-        color_inactive = pygame.Color('lightskyblue3')
-        color_active = pygame.Color('dodgerblue2')
-        color = color_inactive
         active = 0
 
-        register_button = pygame.Rect(200, 320, 280, 50)
+        id_box = self.registerView.id_box
+        password_box = self.registerView.password_box
+        phone_box = self.registerView.phone_box
 
-        done = False
-        while not done:
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    done = True
-                if event.type == KEYDOWN:
-                    if event.key == K_TAB:
-                        active += 1
-                        active %= 2
-                    elif active is not None:
-                        if event.key == K_BACKSPACE:
-                            if active == 0:
-                                username = username[:-1]
-                            elif active == 1:
-                                password = password[:-1]
-                        elif event.key == K_RETURN:
-                            if self.model.register(username, password):
-                                print("회원가입 성공")
-                                self.registered = True
-                                done = True
-                            else:
-                                print("회원가입 실패")
-                                self.popup.show("회원가입 실패")
-                        else:
-                            if active == 0:
-                                username += event.unicode
-                            elif active == 1:
-                                password += event.unicode
+        input_box = [Input("ID:", self.view, id_box),
+                     Input("Password:", self.view, password_box),
+                     Input("Phone:", self.view, phone_box)]
 
-                if event.type == MOUSEBUTTONDOWN:
-                    if input_box1.collidepoint(event.pos):
-                        active = 0
-                    elif input_box2.collidepoint(event.pos):
-                        active = 1
-                    elif register_button.collidepoint(event.pos):
-                        if self.model.register(username, password):
-                            print("회원가입 성공")
-                            self.registered = True
-                            done = True
-                        else:
-                            print("회원가입 실패")
-                            self.popup.show("회원가입 실패")
-
+        while not self.registered:
             self.view.screen.fill((255, 255, 255))
 
-            color1 = color_active if active == 0 else color_inactive
-            color2 = color_active if active == 1 else color_inactive
+            for i in range(len(input_box)):
+                if i == active:
+                    input_box[i].set_active()
+                else:
+                    input_box[i].set_inactive()
+                input_box[i].draw(self.view.screen)
 
-            pygame.draw.rect(self.view.screen, color1, input_box1, 2)
-            pygame.draw.rect(self.view.screen, color2, input_box2, 2)
-            pygame.draw.rect(self.view.screen, color_inactive, register_button, 2)
-
-            self.view.draw_text('ID:', input_box1, 'left_out')
-            self.view.draw_text('Password:', input_box2, 'left_out')
-            self.view.draw_text('Register', register_button)
-
-            self.view.draw_text(username, input_box1, 'left_in')
-            self.view.draw_text(password, input_box2, 'left_in')
+            self.registerView.register_button.draw(self.view.screen)
 
             self.popup.draw(self.view.screen)
 
             pygame.display.flip()
             clock.tick(30)
+
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    done = True
+                if event.type == KEYDOWN:
+                    input_box[active].handle_input(event)
+                    if event.key == K_TAB:
+                        active += 1
+                        active %= len(input_box)
+                    elif event.key == K_RETURN:
+                        self.register(input_box[0].get_content(),
+                                      sha256(input_box[1].get_content().encode('utf-8')).hexdigest(),
+                                      input_box[2].get_content())
+
+                if event.type == MOUSEBUTTONDOWN:
+                    if id_box.collidepoint(event.pos):
+                        active = 0
+                    elif password_box.collidepoint(event.pos):
+                        active = 1
+                    elif phone_box.collidepoint(event.pos):
+                        active = 2
+                    elif self.registerView.register_button.is_collide(event.pos):
+                        self.register(input_box[0].get_content(),
+                                      sha256(input_box[1].get_content().encode('utf-8')).hexdigest(),
+                                      input_box[2].get_content())
+
+    def register(self, username, password, phone):
+        if self.model.register(username, password, phone):
+            print("회원가입 성공")
+            self.registered = True
+        else:
+            print("회원가입 실패")
+            self.popup.show("회원가입 실패")

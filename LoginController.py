@@ -26,12 +26,8 @@ class Controller:
         clock = pygame.time.Clock()
         pygame.display.set_caption("로그인")
         active = 0
-
-        login_button = pygame.Rect(200, 320, 130, 50)
-        register_button = pygame.Rect(350, 320, 130, 50)
         id_box = self.loginView.id_box
         password_box = self.loginView.password_box
-
         input_box = [Input("ID:", self.view, id_box),
                      Input("Password:", self.view, password_box)]
 
@@ -46,7 +42,6 @@ class Controller:
                 else:
                     input_box[i].set_inactive()
                 input_box[i].draw(self.view.screen)
-
 
             self.popup.draw(self.view.screen)  # 팝업 메시지 그리기
 
@@ -73,13 +68,13 @@ class Controller:
                     elif password_box.collidepoint(event.pos):
                         active = 1
 
-                    elif login_button.collidepoint(event.pos):
+                    elif self.loginView.login_button.is_collide(event.pos):  # 로그인 버튼 클릭 처리
                         self.login(input_box[0].get_content(),
                                    sha256(input_box[1].get_content().encode('utf-8')).hexdigest())
                         input_box[0].clear_content()
                         input_box[1].clear_content()
 
-                    elif register_button.collidepoint(event.pos):  # 회원가입 버튼 클릭 처리
+                    elif self.loginView.register_button.is_collide(event.pos):  # 회원가입 버튼 클릭 처리
                         self.popup.hide()
                         self.register_controller.run()
                         if self.register_controller.registered:
