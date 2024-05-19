@@ -1,15 +1,15 @@
 import pygame
 from pygame.locals import *
 from RegisterModel import RegisterModel
-from RegisterView import RegisterView
 from Popup import Popup
+from View import View
 
 
 class RegisterController:
     def __init__(self):
         self.model = RegisterModel()
         self.registered = None
-        self.view = RegisterView()
+        self.view = View()
         self.popup = Popup()
 
     def run(self):

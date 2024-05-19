@@ -4,6 +4,7 @@ from AdminView import AdminView
 from View import View
 from Button import Button
 from Popup import Popup
+from AddController import AddController
 
 
 class AdminController:
@@ -34,6 +35,9 @@ class AdminController:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.adminView.add_button.is_collide(event.pos):
                         print("추가 버튼 클릭")
+                        addController = AddController()
+                        addController.run()
+
                     elif self.adminView.del_button.is_collide(event.pos):
                         print("삭제 버튼 클릭")
                     elif self.adminView.edit_button.is_collide(event.pos):

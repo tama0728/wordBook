@@ -2,7 +2,7 @@ import pygame
 
 
 class Input:
-    def __init__(self, name, view, rect=pygame.Rect(200, 200, 280, 32), limit=17):
+    def __init__(self, name, view, rect=pygame.Rect(200, 200, 280, 32), limit=17, korean=False):
         self.active = False
         self.name = name
         self.content = ''
@@ -11,6 +11,7 @@ class Input:
         self.color_inactive = pygame.Color('lightskyblue3')
         self.color_active = pygame.Color('dodgerblue2')
         self.limit = limit
+        self.korean = korean
 
     def draw(self, screen):
 
@@ -33,6 +34,9 @@ class Input:
             pass
         elif 'z' >= event.unicode >= 'a' or 'Z' >= event.unicode >= 'A' or '9' >= event.unicode >= '0':
             self.content += event.unicode
+        elif self.korean:
+            if 44032 <= ord(event.unicode) <= 55203:
+                self.content += event.unicode
 
     def get_content(self):
         return self.content
