@@ -8,6 +8,8 @@ from Popup import Popup
 from AdminController import AdminController
 from UserController import UserController
 from hashlib import sha256
+from Button import Button
+from Input import Input
 
 
 class Controller:
@@ -23,10 +25,6 @@ class Controller:
     def run(self):
         clock = pygame.time.Clock()
         pygame.display.set_caption("로그인")
-        username = ''
-        password = ''
-        color_inactive = pygame.Color('lightskyblue3')
-        color_active = pygame.Color('dodgerblue2')
         active = 0
 
         login_button = pygame.Rect(200, 320, 130, 50)
@@ -34,22 +32,21 @@ class Controller:
         id_box = self.loginView.id_box
         password_box = self.loginView.password_box
 
+        input_box = [Input("ID:", self.view, id_box),
+                     Input("Password:", self.view, password_box)]
+
         while not self.done:
             self.view.screen.fill((255, 255, 255))
+            self.loginView.login_button.draw(self.view.screen)
+            self.loginView.register_button.draw(self.view.screen)
 
-            color1 = color_active if active == 0 else color_inactive
-            color2 = color_active if active == 1 else color_inactive
+            for i in range(len(input_box)):
+                if i == active:
+                    input_box[i].set_active()
+                else:
+                    input_box[i].set_inactive()
+                input_box[i].draw(self.view.screen)
 
-            self.loginView.draw(self.view.screen)
-
-            pygame.draw.rect(self.view.screen, color1, id_box, 2)
-            pygame.draw.rect(self.view.screen, color2, password_box, 2)
-
-            self.view.draw_text('ID:', id_box, 'left_out')
-            self.view.draw_text('Password:', password_box, 'left_out')
-
-            self.view.draw_text(username, id_box, 'left_in')
-            self.view.draw_text(password, password_box, 'left_in')
 
             self.popup.draw(self.view.screen)  # 팝업 메시지 그리기
 
@@ -59,35 +56,29 @@ class Controller:
             for event in pygame.event.get():
                 if event.type == QUIT:
                     self.done = True
+
                 if event.type == KEYDOWN:
+                    input_box[active].handle_input(event)
                     if event.key == K_TAB:
                         active += 1
                         active %= 2
-                    elif active is not None:
-                        if event.key == K_BACKSPACE:
-                            if active == 0:
-                                username = username[:-1]
-                            elif active == 1:
-                                password = password[:-1]
-                        elif event.key == K_RETURN:
-                            self.login(username, sha256(password.encode('utf-8')).hexdigest())
-                            username = ''
-                            password = ''
-                        else:
-                            if active == 0:
-                                username += event.unicode
-                            elif active == 1:
-                                password += event.unicode
+                    elif event.key == K_RETURN:
+                            self.login(input_box[0].get_content(), sha256(input_box[1].get_content().encode('utf-8')).hexdigest())
+                            input_box[0].clear_content()
+                            input_box[1].clear_content()
 
                 if event.type == MOUSEBUTTONDOWN:
                     if id_box.collidepoint(event.pos):
                         active = 0
                     elif password_box.collidepoint(event.pos):
                         active = 1
+
                     elif login_button.collidepoint(event.pos):
-                        self.login(username, sha256(password.encode('utf-8')).hexdigest())
-                        username = ''
-                        password = ''
+                        self.login(input_box[0].get_content(),
+                                   sha256(input_box[1].get_content().encode('utf-8')).hexdigest())
+                        input_box[0].clear_content()
+                        input_box[1].clear_content()
+
                     elif register_button.collidepoint(event.pos):  # 회원가입 버튼 클릭 처리
                         self.popup.hide()
                         self.register_controller.run()
@@ -96,6 +87,7 @@ class Controller:
                             self.popup.show("회원가입 성공")
                         pygame.display.set_caption("로그인")
                         active = 0
+
                 if event.type == MOUSEMOTION:
                     self.loginView.login_button.is_hover(event.pos)
                     self.loginView.register_button.is_hover(event.pos)
