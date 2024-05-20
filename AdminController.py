@@ -5,6 +5,8 @@ from View import View
 from Button import Button
 from Popup import Popup
 from AddController import AddController
+from DelController import DelController
+from EditController import EditController
 
 
 class AdminController:
@@ -14,6 +16,7 @@ class AdminController:
         self.popup = Popup()
 
     def run(self):
+        pygame.display.set_caption("관리자")
         done = False
         while not done:
             clock = pygame.time.Clock()
@@ -40,9 +43,15 @@ class AdminController:
 
                     elif self.adminView.del_button.is_collide(event.pos):
                         print("삭제 버튼 클릭")
+                        delController = DelController()
+                        delController.run()
                     elif self.adminView.edit_button.is_collide(event.pos):
                         print("수정 버튼 클릭")
+                        editController = EditController()
+                        editController.run()
                 if event.type == pygame.MOUSEMOTION:
                     self.adminView.add_button.is_hover(event.pos)
                     self.adminView.del_button.is_hover(event.pos)
                     self.adminView.edit_button.is_hover(event.pos)
+
+            pygame.display.set_caption("관리자")

@@ -43,3 +43,6 @@ class Input:
 
     def clear_content(self):
         self.content = ''
+
+    def set_content(self, content):
+        self.content = content
