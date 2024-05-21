@@ -1,6 +1,6 @@
 import mysql.connector
+
 from config import config
-from hashlib import sha256
 
 
 class LoginModel:

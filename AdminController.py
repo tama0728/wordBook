@@ -1,12 +1,11 @@
 import pygame
-import AdminModel
-from AdminView import AdminView
-from View import View
-from Button import Button
-from Popup import Popup
+
 from AddController import AddController
+from AdminView import AdminView
 from DelController import DelController
 from EditController import EditController
+from Popup import Popup
+from View import View
 
 
 class AdminController:

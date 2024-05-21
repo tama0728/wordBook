@@ -1,5 +1,6 @@
-import pygame
 import time
+
+import pygame
 from hangul_utils import join_jamos
 
 

@@ -1,6 +1,7 @@
 import mysql.connector
-from config import config
 import pandas as pd
+
+from config import config
 
 conn = mysql.connector.connect(**config)
 cursor = conn.cursor(prepared=True)

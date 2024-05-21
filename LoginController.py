@@ -1,15 +1,16 @@
+from hashlib import sha256
+
 import pygame
 from pygame.locals import *
-from LoginModel import LoginModel
-from View import View
-from LoginView import LoginView
-from RegisterController import RegisterController
-from Popup import Popup
+
 from AdminController import AdminController
-from UserController import UserController
-from hashlib import sha256
-from Button import Button
 from Input import Input
+from LoginModel import LoginModel
+from LoginView import LoginView
+from Popup import Popup
+from RegisterController import RegisterController
+from UserController import UserController
+from View import View
 
 
 class Controller:

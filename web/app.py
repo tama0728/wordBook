@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, session
-import pymysql
 import hashlib
-import sys
+
+import pymysql
+from flask import Flask, render_template, request, redirect, url_for, session
+
 import config
 
 app = Flask(__name__)

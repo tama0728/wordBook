@@ -1,4 +1,5 @@
 import mysql.connector
+
 from config import config
 
 

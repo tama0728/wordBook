@@ -1,12 +1,11 @@
 import pygame
-from pygame.locals import *
-from View import View
-from Popup import Popup
-from Button import Button
-from Input import Input
-from DelView import DelView
+
 from DelModel import del_word
+from DelView import DelView
+from Input import Input
+from Popup import Popup
 from Search import search
+from View import View
 
 
 class DelController:

@@ -1,5 +1,4 @@
 import pygame
-from View import View
 
 
 class CheckBox:

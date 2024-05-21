@@ -1,6 +1,7 @@
+import sys
+
 import pygame
 from pygame.locals import QUIT
-import sys
 
 pygame.init()
 SCREEN = pygame.display.set_mode((3024, 1964))
