@@ -34,9 +34,9 @@ class Input:
             pass
         elif 'z' >= event.unicode >= 'a' or 'Z' >= event.unicode >= 'A' or '9' >= event.unicode >= '0':
             self.content += event.unicode
-        elif self.korean:
-            if 44032 <= ord(event.unicode) <= 55203:
-                self.content += event.unicode
+        # elif self.korean:
+        #     if 44032 <= ord(event.unicode) <= 55203:
+        #         self.content += event.unicode
 
     def get_content(self):
         return self.content

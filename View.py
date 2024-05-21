@@ -8,6 +8,7 @@ class View:
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         self.font = pygame.font.SysFont("d2coding", 32)
         self.text_color = pygame.Color('black')
+        pygame.key.set_repeat(500, 50)
 
     def draw_text(self, text, rect, where='center', font_size=32):
         self.font = pygame.font.SysFont("d2coding", font_size)
