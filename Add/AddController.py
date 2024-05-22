@@ -4,9 +4,9 @@ from Add.AddModel import add_word
 from Add.AddView import AddView
 from Edit.EditModel import edit_word
 from View import View
-from api.CheckBox import CheckBox
-from api.Input import Input
-from api.Popup import Popup
+from Api.CheckBox import CheckBox
+from Api.Input import Input
+from Api.Popup import Popup
 
 
 class AddController:

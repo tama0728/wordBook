@@ -6,8 +6,8 @@ from pygame.locals import *
 from Register.RegisterModel import RegisterModel
 from Register.RegisterView import RegisterView
 from View import View
-from api.Input import Input
-from api.Popup import Popup
+from Api.Input import Input
+from Api.Popup import Popup
 
 
 class RegisterController:

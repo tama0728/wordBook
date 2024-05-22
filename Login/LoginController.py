@@ -9,8 +9,8 @@ from Login.LoginView import LoginView
 from Register.RegisterController import RegisterController
 from User.UserController import UserController
 from View import View
-from api.Input import Input
-from api.Popup import Popup
+from Api.Input import Input
+from Api.Popup import Popup
 
 
 class Controller:
