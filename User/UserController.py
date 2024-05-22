@@ -1,8 +1,8 @@
 import pygame
 
-from Popup import Popup
-from UserView import UserView
+from User.UserView import UserView
 from View import View
+from api.Popup import Popup
 
 
 class UserController:

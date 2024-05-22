@@ -3,14 +3,14 @@ from hashlib import sha256
 import pygame
 from pygame.locals import *
 
-from AdminController import AdminController
-from Input import Input
-from LoginModel import LoginModel
-from LoginView import LoginView
-from Popup import Popup
-from RegisterController import RegisterController
-from UserController import UserController
+from Admin.AdminController import AdminController
+from Login.LoginModel import LoginModel
+from Login.LoginView import LoginView
+from Register.RegisterController import RegisterController
+from User.UserController import UserController
 from View import View
+from api.Input import Input
+from api.Popup import Popup
 
 
 class Controller:
@@ -91,7 +91,7 @@ class Controller:
     def login(self, username, password):
         if self.loginModel.login(username, password):
             print("로그인 성공")
-            self.done = True
+            # self.done = True
             res = self.loginModel.get_admin(username)
             if self.loginModel.get_admin(username):
                 print("관리자 로그인")

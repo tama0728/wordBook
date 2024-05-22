@@ -1,11 +1,11 @@
 import pygame
 
-from DelModel import del_word
-from DelView import DelView
-from Input import Input
-from Popup import Popup
-from Search import search
+from Del.DelModel import del_word
+from Del.DelView import DelView
 from View import View
+from api.Input import Input
+from api.Popup import Popup
+from api.Search import search
 
 
 class DelController:

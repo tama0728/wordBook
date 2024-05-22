@@ -1,11 +1,11 @@
 import pygame
 
-from AddController import AddController
-from EditView import EditView
-from Input import Input
-from Popup import Popup
-from Search import search
+from Add.AddController import AddController
+from Edit.EditView import EditView
 from View import View
+from api.Input import Input
+from api.Popup import Popup
+from api.Search import search
 
 
 class EditController:

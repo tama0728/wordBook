@@ -1,12 +1,12 @@
 import pygame
 
-from AddModel import add_word
-from AddView import AddView
-from CheckBox import CheckBox
-from EditModel import edit_word
-from Input import Input
-from Popup import Popup
+from Add.AddModel import add_word
+from Add.AddView import AddView
+from Edit.EditModel import edit_word
 from View import View
+from api.CheckBox import CheckBox
+from api.Input import Input
+from api.Popup import Popup
 
 
 class AddController:

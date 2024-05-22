@@ -1,11 +1,11 @@
 import pygame
 
-from AddController import AddController
-from AdminView import AdminView
-from DelController import DelController
-from EditController import EditController
-from Popup import Popup
+from Add.AddController import AddController
+from Admin.AdminView import AdminView
+from Del.DelController import DelController
+from Edit.EditController import EditController
 from View import View
+from api.Popup import Popup
 
 
 class AdminController:

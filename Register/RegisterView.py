@@ -1,7 +1,7 @@
 import pygame
 
-from Button import Button
 from View import View
+from api.Button import Button
 
 
 class RegisterView:

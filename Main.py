@@ -1,4 +1,4 @@
-from LoginController import Controller
+from Login.LoginController import Controller
 
 def main():
     controller = Controller()

@@ -3,11 +3,11 @@ from hashlib import sha256
 import pygame
 from pygame.locals import *
 
-from Input import Input
-from Popup import Popup
-from RegisterModel import RegisterModel
-from RegisterView import RegisterView
+from Register.RegisterModel import RegisterModel
+from Register.RegisterView import RegisterView
 from View import View
+from api.Input import Input
+from api.Popup import Popup
 
 
 class RegisterController:
