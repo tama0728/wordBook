@@ -1,8 +1,6 @@
-import time
-
 import pygame
+import time
 from hangul_utils import join_jamos
-
 
 class HangulInputBox(pygame.sprite.Sprite):
     '''
@@ -36,7 +34,7 @@ class HangulInputBox(pygame.sprite.Sprite):
         self.image = pygame.Surface([self.width, self.height])
         self.rect = self.image.get_rect()
 
-        self.text = '첫 글자'
+        self.text = ''
         self.textImage = self.font.render(self.text, True, self.fColor)
         self.textRect = self.textImage.get_rect()
         self.hanText = ''
@@ -62,7 +60,7 @@ class HangulInputBox(pygame.sprite.Sprite):
                     self.hanText = self.hanText[:-1]
                 elif len(self.text) > 0:
                     self.text = self.text[:-1]
-            elif event.mod & pygame.KMOD_LSHIFT and event.key == pygame.K_SPACE:  # 한영 변환 인식 Left Shift + space
+            elif event.key == pygame.K_ESCAPE:  # 한영 변환 인식 Left Shift + space
                 if self.hanMode:  # 영문모드로 토글
                     self.text += HangulInputBox.engkor(self.hanText)
                     self.cursor = pygame.Rect(self.textRect.topright, (3, self.fontSize))
@@ -78,7 +76,7 @@ class HangulInputBox(pygame.sprite.Sprite):
                     self.text += event.unicode
             #----------
             text2 = self.text + HangulInputBox.engkor(self.hanText)
-            self.textImage = self.font.render(text2, True, 'white')
+            self.textImage = self.font.render(text2, True, 'black')
             self.textRect = self.textImage.get_rect()
             if self.textRect.width > self.rect.width:
                 self.textRect.topright = (self.rect.width - self.fontSize, 0)
@@ -89,7 +87,7 @@ class HangulInputBox(pygame.sprite.Sprite):
         self.image.fill(self.bColor)
         self.image.blit(self.textImage, self.textRect)
         if time.time() % 1 > 0.5:
-            pygame.draw.rect(self.image, 'red', self.cursor)
+            pygame.draw.rect(self.image, 'black', self.cursor)
 
     @classmethod
     def engkor(cls, text):

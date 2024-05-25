@@ -1,5 +1,4 @@
 from hashlib import sha256
-
 import pygame
 from pygame.locals import *
 
@@ -12,7 +11,6 @@ from RegisterController import RegisterController
 from UserController import UserController
 from View import View
 
-
 class Controller:
     def __init__(self):
         pygame.init()
@@ -22,6 +20,7 @@ class Controller:
         self.popup = Popup()
         self.register_controller = RegisterController()
         self.done = False
+        self.logged_in_user = None
 
     def run(self):
         clock = pygame.time.Clock()
@@ -59,9 +58,9 @@ class Controller:
                         active += 1
                         active %= 2
                     elif event.key == K_RETURN:
-                            self.login(input_box[0].get_content(), sha256(input_box[1].get_content().encode('utf-8')).hexdigest())
-                            input_box[0].clear_content()
-                            input_box[1].clear_content()
+                        self.login(input_box[0].get_content(), sha256(input_box[1].get_content().encode('utf-8')).hexdigest())
+                        input_box[0].clear_content()
+                        input_box[1].clear_content()
 
                 if event.type == MOUSEBUTTONDOWN:
                     if id_box.collidepoint(event.pos):
@@ -92,14 +91,14 @@ class Controller:
         if self.loginModel.login(username, password):
             print("로그인 성공")
             self.done = True
-            res = self.loginModel.get_admin(username)
+            self.logged_in_user = username  # 로그인한 사용자 저장
             if self.loginModel.get_admin(username):
                 print("관리자 로그인")
                 admin = AdminController()
                 admin.run()
             else:
                 print("사용자 로그인")
-                user = UserController()
+                user = UserController(username)  # 로그인한 사용자 정보를 전달
                 user.run()
         else:
             print("로그인 실패")
