@@ -42,7 +42,7 @@ class UserController:
                         controller.run()
                     elif self.userView.test_button.is_collide(event.pos):
                         print("테스트 버튼 클릭")
-                        test_controller = ShortAnswerTestController()  # Instantiate the test controller
+                        test_controller = ShortAnswerTestController(self.id)  # Instantiate the test controller with user_id
                         test_controller.run()  # Run the test
                     elif self.userView.game_button.is_collide(event.pos):
                         print("게임 버튼 클릭")

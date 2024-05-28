@@ -17,12 +17,13 @@ class WordCardController:
         self.model = WordCardModel()
         self.view = WordCardView(self.screen)
         self.current_card_index = 0
-        self.wordcards = self.model.fetch_wordcards(filter_levels=['1', '2', '3'], id=id)
+        self.wordcards = self.model.fetch_wordcards(filter_levels=[], id=id)
         self.engine = pyttsx3.init()
         self.running = True
         self.showing_meaning = False
-        self.selected_levels = ['1', '2', '3']
+        self.selected_levels = []
         self.show_favorites_only = False
+        self.show_wrong_only = False
         self.popup = Popup()
 
         self.display_word()  # 초기 단어카드 표시
@@ -48,12 +49,16 @@ class WordCardController:
             self.current_card_index -= 1
             self.showing_meaning = False
             self.display_word()
+        else:
+            self.popup.show("첫 번째 페이지 입니다", 60)
 
     def show_next_card(self):
         if self.current_card_index < len(self.wordcards) - 1:
             self.current_card_index += 1
             self.showing_meaning = False
             self.display_word()
+        else:
+            self.popup.show("마지막 페이지입니다", 60)
 
     def play_word_pronunciation(self):
         if self.wordcards:
@@ -73,13 +78,17 @@ class WordCardController:
         self.display_word()
 
     def filter_wordcards(self):
-        self.wordcards = self.model.fetch_wordcards(self.selected_levels, id=self.id, only_favorites=self.show_favorites_only)
+        self.wordcards = self.model.fetch_wordcards(self.selected_levels, id=self.id, only_favorites=self.show_favorites_only, only_wrong=self.show_wrong_only)
         self.current_card_index = 0
         self.display_word()
 
     def toggle_level(self, level):
         if level == 'favorites':
-            self.show_favorites_only = not self.show_favorites_only
+            if not self.show_wrong_only:  # 틀린 단어와 동시 선택 불가
+                self.show_favorites_only = not self.show_favorites_only
+        elif level == 'wrong':
+            if not self.show_favorites_only:  # 즐겨찾기와 동시 선택 불가
+                self.show_wrong_only = not self.show_wrong_only
         else:
             if level in self.selected_levels:
                 self.selected_levels.remove(level)
@@ -87,6 +96,7 @@ class WordCardController:
                 self.selected_levels.append(level)
         self.view.selected_levels = self.selected_levels
         self.view.show_favorites_only = self.show_favorites_only
+        self.view.show_wrong_only = self.show_wrong_only
         self.filter_wordcards()
         self.display_word()
 
@@ -128,7 +138,3 @@ class WordCardController:
         user_controller = UserController(self.id)
         user_controller.run()
         pygame.quit()
-
-if __name__ == "__main__":
-    controller = WordCardController(id=1)  # 예시 id
-    controller.run()

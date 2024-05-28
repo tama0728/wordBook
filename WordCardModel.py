@@ -13,19 +13,21 @@ class WordCardModel:
         self.conn = mysql.connector.connect(**config)
         self.cursor = self.conn.cursor()
 
-    def fetch_wordcards(self, filter_levels=None, id=None, only_favorites=False):
+    def fetch_wordcards(self, filter_levels=None, id=None, only_favorites=False, only_wrong=False):
         filter_query = []
         if filter_levels:
             filter_query.append("lv IN ({})".format(",".join(map(str, filter_levels))))
         if only_favorites and id is not None:
             filter_query.append("word IN (SELECT word FROM favorite WHERE id = %s)")
+        if only_wrong and id is not None:
+            filter_query.append("word IN (SELECT word FROM wrong WHERE id = %s)")
 
         filter_query = " AND ".join(filter_query)
         if filter_query:
             filter_query = "WHERE " + filter_query
 
         query = f"SELECT word, mean, lv FROM words {filter_query}"
-        self.cursor.execute(query, (id,) if only_favorites and id is not None else ())
+        self.cursor.execute(query, (id,) if (only_favorites or only_wrong) and id is not None else ())
         wordcards = [WordCard(word, mean, level) for word, mean, level in self.cursor.fetchall()]
 
         if id is not None and not only_favorites:

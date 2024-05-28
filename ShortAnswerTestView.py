@@ -2,58 +2,90 @@ import pygame
 from hangulInputBox import HangulInputBox
 
 class ShortAnswerTestView:
-    def __init__(self, screen):
+    def __init__(self, screen, font):
         self.screen = screen
-        self.font = pygame.font.SysFont("Malgun Gothic", 48)
-        self.font_small = pygame.font.SysFont("Malgun Gothic", 28)
-        self.font_tiny = pygame.font.SysFont("Malgun Gothic", 18)
+        self.font = font
+        self.box = HangulInputBox('NanumBarunGothic.ttf', 32, 25, 'black', 'gray')
+        self.box.rect.center = (400, 400)  # 텍스트 입력창 위치 조정
+        self.modes = ['영 -> 한\n객관식', '한 -> 영\n객관식', '영 -> 한\n주관식', '한 -> 영\n주관식']
+        self.levels = ['Level 1', 'Level 2', 'Level 3', 'Favorites', 'Wrong']
+        self.mode_buttons = self.create_buttons(self.modes, 2, 2)
+        self.level_buttons = self.create_buttons(self.levels, 1, 5)
+        self.start_button = pygame.Rect(350, 500, 100, 50)
+        self.home_button = pygame.Rect(700, 500, 80, 80)
 
-        self.level_buttons = {
-            '1': pygame.Rect(100, 150, 100, 50),
-            '2': pygame.Rect(250, 150, 100, 50),
-            '3': pygame.Rect(400, 150, 100, 50),
-        }
-        self.start_button = pygame.Rect(300, 250, 200, 50)
-        self.input_box = HangulInputBox('NanumBarunGothic.ttf', 32, 400 // 16, 'black', 'gray')
-        self.input_box.rect.center = (400, 500)
+        self.checkbox_checked = pygame.image.load("checkbox_unchecked.png").convert_alpha()
+        self.checkbox_checked = pygame.transform.scale(self.checkbox_checked, (30, 30))
+        self.checkbox_unchecked = pygame.image.load("checkbox_checked.png").convert_alpha()
+        self.checkbox_unchecked = pygame.transform.scale(self.checkbox_unchecked, (30, 30))
+        self.home_icon = pygame.image.load("home.png").convert_alpha()
+        self.home_icon = pygame.transform.scale(self.home_icon, (80, 80))
 
-        self.selected_level = None
+    def create_buttons(self, items, cols, rows):
+        buttons = []
+        for i, item in enumerate(items):
+            row = i % rows
+            col = i // rows
+            rect = pygame.Rect((100 + col * 300, 150 + row * 80), (200, 50))  # 버튼 크기와 위치 조정
+            buttons.append((rect, item))
+        return buttons
 
-    def draw_text(self, text, rect, position):
-        if position == 'left_out':
-            pos = (rect.x - rect.width // 2 + 10, rect.y + rect.height // 2 - 10)
-        else:  # 'left_in'
-            pos = (rect.x + 10, rect.y + rect.height // 2 - 10)
-        text_surface = self.font_small.render(text, True, (0, 0, 0))
-        self.screen.blit(text_surface, pos)
+    def render_mode_selection(self):
+        self.screen.fill('white')
+        for rect, mode in self.mode_buttons:
+            pygame.draw.rect(self.screen, (173, 216, 230), rect, border_radius=10)  # 하늘색 배경과 둥근 모서리
+            lines = mode.split('\n')
+            for idx, line in enumerate(lines):
+                mode_text = self.font.render(line, True, 'black')
+                mode_text_rect = mode_text.get_rect(center=(rect.centerx, rect.centery - 10 + idx * 20))  # 텍스트 두 줄 배치
+                self.screen.blit(mode_text, mode_text_rect)
+        self.screen.blit(self.home_icon, self.home_button)
 
-    def display_home(self):
-        self.screen.fill((255, 255, 255))
-        for level, rect in self.level_buttons.items():
-            color = (0, 255, 0) if self.selected_level == level else (0, 0, 0)
-            pygame.draw.rect(self.screen, color, rect, 2)
-            label_surface = self.font_small.render(f"Level {level}", True, color)
-            self.screen.blit(label_surface, (rect.x + 10, rect.y + 10))
+    def render_level_selection(self, selected_level):
+        self.screen.fill('white')
+        for rect, level in self.level_buttons:
+            image = self.checkbox_checked if level == selected_level else self.checkbox_unchecked
+            self.screen.blit(image, rect.topleft)
+            level_text = self.font.render(level, True, 'black')
+            level_text_rect = level_text.get_rect(midleft=(rect.x + 40, rect.centery))
+            self.screen.blit(level_text, level_text_rect)
+        if selected_level:
+            pygame.draw.rect(self.screen, (173, 216, 230), self.start_button, border_radius=10)
+            start_text = self.font.render("Start", True, 'black')
+            start_rect = start_text.get_rect(center=self.start_button.center)
+            self.screen.blit(start_text, start_rect)
+        self.screen.blit(self.home_icon, self.home_button)
 
-        pygame.draw.rect(self.screen, (0, 0, 0), self.start_button, 2)
-        start_surface = self.font_small.render("Start", True, (0, 0, 0))
-        self.screen.blit(start_surface, (self.start_button.x + 60, self.start_button.y + 10))
-        pygame.display.flip()
+    def render_word(self, game_mode, word, is_subjective, current_index, total_words):
+        self.screen.fill('white')
 
-    def display_question(self, question, user_input):
-        self.screen.fill((255, 255, 255))
-        question_surface = self.font.render(question, True, (0, 0, 0))
-        self.screen.blit(question_surface, (400 - question_surface.get_width() // 2, 200))
+        # 하늘색 큰 사각형
+        rect = pygame.Rect(150, 100, 500, 250)
+        pygame.draw.rect(self.screen, (173, 216, 230), rect, border_radius=10)
 
-        # Draw light blue rectangle
-        pygame.draw.rect(self.screen, (173, 216, 230), (100, 400, 600, 50))  # Light blue rectangle
-        self.input_box.text = user_input
-        self.input_box.draw(self.screen)
+        # 단어 표시
+        display_text = word.mean if '한 -> 영' in game_mode else word.word
+        word_text = self.font.render(display_text, True, 'black')
+        word_text_rect = word_text.get_rect(center=(rect.centerx, rect.centery))
+        self.screen.blit(word_text, word_text_rect)
 
-        pygame.display.flip()
+        # 문제 번호 표시
+        progress_text = self.font.render(f"{current_index + 1}/{total_words}", True, 'black')
+        progress_text_rect = progress_text.get_rect(bottomright=(rect.right - 10, rect.bottom - 10))
+        self.screen.blit(progress_text, progress_text_rect)
 
-    def display_result(self, score):
-        self.screen.fill((255, 255, 255))
-        result_surface = self.font.render(f"Your Score: {score}", True, (0, 0, 0))
-        self.screen.blit(result_surface, (400 - result_surface.get_width() // 2, 200))
-        pygame.display.flip()
+        # 텍스트 입력창
+        self.box.rect.midtop = (400, 400)
+        self.box.update(None)  # 화면에 그리기 위해 update 호출
+        self.screen.blit(self.box.image, self.box.rect)
+
+        self.screen.blit(self.home_icon, self.home_button)
+
+    def render_score(self, score, total):
+        self.screen.fill('white')
+        score_text = self.font.render(f"점수: {score}/{total}", True, 'black')
+        score_text_rect = score_text.get_rect(center=(400, 300))
+        self.screen.blit(score_text, score_text_rect)
+
+    def update_input_box(self, event):
+        self.box.update(event)
