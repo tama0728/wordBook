@@ -1,0 +1,8 @@
+User.UserController에서
+
+elif self.userView.game_button.is_collide(event.pos):
+	print("게임 버튼 클릭")
+	game_main(user_id)
+
+만 하시면 바로 게임 실행 가능합니다.
+매개변수는 user의 id를 바로 받습니다.
