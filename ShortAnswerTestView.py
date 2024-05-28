@@ -5,7 +5,7 @@ class ShortAnswerTestView:
     def __init__(self, screen, font):
         self.screen = screen
         self.font = font
-        self.box = HangulInputBox('NanumBarunGothic.ttf', 32, 25, 'black', 'gray')
+        self.box = HangulInputBox('D2Coding', 32, 25, 'black', 'gray')
         self.box.rect.center = (400, 400)  # 텍스트 입력창 위치 조정
         self.modes = ['영 -> 한\n객관식', '한 -> 영\n객관식', '영 -> 한\n주관식', '한 -> 영\n주관식']
         self.levels = ['Level 1', 'Level 2', 'Level 3', 'Favorites', 'Wrong']
