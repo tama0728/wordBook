@@ -12,7 +12,7 @@ BLACK = (0, 0, 0)
 GRAY = (200, 200, 200)
 
 # 메인 루프
-def game_main(username):
+def game_main(user_id):
     pygame.init()
     screen = pygame.display.set_mode((800, 600))
     screen_width, screen_height = screen.get_size()
@@ -47,9 +47,9 @@ def game_main(username):
                 if homeButton.is_collide(event.pos):
                     gameContinue = False
                 if acid_rain_rect.is_collide(event.pos):
-                    acid_rain_start.acid_rain_main(username)
+                    acid_rain_start.acid_rain_main(user_id)
                 if card_flip_rect.is_collide(event.pos):
-                    card_flip_start.card_flip_main(username)
+                    card_flip_start.card_flip_main(user_id)
 
         # 화면을 하얀색으로 채우기
         screen.fill(WHITE)
@@ -69,4 +69,4 @@ def game_main(username):
 
 
 if __name__ == '__main__':
-    game_main()
+    game_main("146") #jun의 id

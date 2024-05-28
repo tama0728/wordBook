@@ -11,7 +11,7 @@ GRAY = (200, 200, 200)
 
 # StartScreen 클래스
 class StartScreen:
-    def __init__(self, screen, username):
+    def __init__(self, screen, user_id):
         self.screen = screen
         self.screen_width, self.screen_height = self.screen.get_size()
         self.clock = pygame.time.Clock()
@@ -20,16 +20,19 @@ class StartScreen:
         self.home_button = Rectangle(self.screen_width - 70, self.screen_height - 70, 50, 50)
         current_dir = os.path.dirname(__file__)
         self.home_button.set_image(os.path.join(current_dir, 'Card_Flip', 'assets', 'home.png'))
-        self.username = username
+        self.user_id = user_id
         self.Ranking = ShowRanking(screen)
 
     def acid_start(self):
         self.game_name.set_text("산성비")
-        self.Ranking.draw_rain_ranking()
+        self.screen.fill(WHITE)
+        self.Ranking.draw_rain_ranking(self.user_id)
         return self.run()
 
     def card_start(self):
         self.game_name.set_text("카드 뒤집기")
+        self.screen.fill(WHITE)
+        self.Ranking.draw_card_ranking(self.user_id)
         return self.run()
 
     def run(self):
@@ -43,8 +46,6 @@ class StartScreen:
                         return True
                     elif self.home_button.collidepoint(event.pos):
                         return False
-
-            self.screen.fill(WHITE)
 
             # 게임 이름 텍스트
             self.start_button.set_text("시작하기")

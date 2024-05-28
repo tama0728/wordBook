@@ -32,8 +32,6 @@ class GameController:
             # 카드 선택
             else:
                 for i, card in enumerate(self.model.cards):
-                    #x = self.view.margin + (i % 6) * (self.view.card_width + self.view.margin)
-                    #y = self.view.margin + (i // 6) * (self.view.card_height + self.view.margin)
                     x = (self.view.screen_width - (6 * self.view.card_width + 5 * self.view.margin)) // 2 + (i % 6) * (self.view.card_width + self.view.margin)
                     y = self.view.screen_height - self.view.margin - ((i // 6) + 1) * (self.view.card_height + self.view.margin) - 50
                     if pygame.Rect(x, y, self.view.card_width, self.view.card_height).collidepoint(pos):

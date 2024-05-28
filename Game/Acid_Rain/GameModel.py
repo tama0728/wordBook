@@ -7,7 +7,7 @@ class WordModel:
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.falling_words = []
-        self.dict_list = create_translation_dict((generate_word_pairs(15)))
+        self.dict_list = create_translation_dict((generate_word_pairs(20)))
         self.word_list = list(self.dict_list.values())
         self.lives = 3
         self.score = 0

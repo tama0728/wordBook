@@ -1,5 +1,4 @@
 import pygame
-import sys
 from Game.StartScreen import StartScreen
 from Game.ShowResult import ShowResult
 from Game.Card_Flip.GameModel import GameModel
@@ -8,14 +7,14 @@ from Game.Card_Flip.GameController import GameController
 
 
 # 메인 루프
-def card_flip_main(username):
+def card_flip_main(user_id):
     pygame.init()
     screen = pygame.display.set_mode((800, 600))
     pygame.display.set_caption('카드 뒤집기 게임')
     model = GameModel()
     view = GameView(screen, model)
     controller = GameController(model, view)
-    start_screen = StartScreen(screen, username)
+    start_screen = StartScreen(screen, user_id)
     gameContinue = start_screen.card_start()
 
     # 게임 시작 시간 기록
@@ -33,7 +32,7 @@ def card_flip_main(username):
         if model.is_won():
             elapsed_time = model.get_elapsed_time()
             result_viewer = ShowResult(screen, 800, 600)
-            TF = result_viewer.show_time_result(elapsed_time, username)
+            TF = result_viewer.show_time_result(elapsed_time, user_id)
             if TF:
                 card_flip_main()
             break
@@ -42,4 +41,4 @@ def card_flip_main(username):
 
 
 if __name__ == '__main__':
-    card_flip_main("jun")
+    card_flip_main("146") #jun의 id

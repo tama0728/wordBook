@@ -1,6 +1,4 @@
 import pygame
-import sys
-from Game.GameRectangle import Rectangle
 from Game.Check_Write_Ranking import Check_Write_Ranking
 
 WHITE = (255, 255, 255)
