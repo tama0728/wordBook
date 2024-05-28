@@ -7,7 +7,8 @@ from ShortAnswerTestView import ShortAnswerTestView
 class ShortAnswerTestController:
     def __init__(self, user_id):  # user_id를 인자로 받음
         pygame.init()
-        self.screen = pygame.display.set_mode((800, 600))
+        self.original_screen_size = (800, 600)
+        self.screen = pygame.display.set_mode(self.original_screen_size)
         pygame.display.set_caption("단어 테스트")
         self.font = pygame.font.SysFont("D2Coding", 32)
         self.view = ShortAnswerTestView(self.screen, self.font)
@@ -43,12 +44,14 @@ class ShortAnswerTestController:
                         if self.selecting_levels:
                             self.selecting_levels = False
                             self.selecting_mode = True
+                            pygame.display.set_mode(self.original_screen_size)  # 원래 창 크기로 변경
                         elif not self.selecting_mode and not self.selecting_levels:
                             self.selecting_levels = False
                             self.selecting_mode = True
                             self.current_word_index = 0
                             self.score = 0
                             self.words = []
+                            pygame.display.set_mode(self.original_screen_size)  # 원래 창 크기로 변경
                         else:
                             self.running = False
                     if self.selecting_mode:
@@ -73,6 +76,8 @@ class ShortAnswerTestController:
                             elif self.selected_level == 'Wrong':
                                 filter_levels = None
                             self.words = self.model.fetch_wordcards(limit=10, filter_levels=filter_levels, user_id=self.user_id, only_favorites=(self.selected_level == 'Favorites'), only_wrong=(self.selected_level == 'Wrong'))
+                            pygame.display.set_mode((800, 600))  # 창 크기 변경
+
                 if event.type == pygame.USEREVENT and not self.enter_event_handled:
                     if event.name == 'enterEvent' and not (self.selecting_mode or self.selecting_levels):
                         user_input = event.text.strip()
