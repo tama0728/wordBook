@@ -3,9 +3,9 @@ import pygame
 class WordCardView:
     def __init__(self, screen):
         self.screen = screen
-        self.font = pygame.font.SysFont("Malgun Gothic", 48)
-        self.font_small = pygame.font.SysFont("Malgun Gothic", 28)
-        self.font_tiny = pygame.font.SysFont("Malgun Gothic", 18)
+        self.font = pygame.font.SysFont("D2Coding", 48)
+        self.font_small = pygame.font.SysFont("D2Coding", 28)
+        self.font_tiny = pygame.font.SysFont("D2Coding", 18)
 
         # 이미지 로드
         self.left_arrow = pygame.image.load("left_arrow.png").convert_alpha()
@@ -26,16 +26,16 @@ class WordCardView:
         self.checkbox_unchecked = pygame.transform.scale(self.checkbox_unchecked, (30, 30))
 
         self.filter_labels = {
-            '1': '하',
-            '2': '중',
-            '3': '상',
-            'favorites': '★'
+            '1': '초급',
+            '2': '중급',
+            '3': '상급',
+            'favorites': '즐겨찾기'
         }
         self.filter_buttons = {
-            '1': pygame.Rect(50, 150, 30, 30),
-            '2': pygame.Rect(50, 200, 30, 30),
-            '3': pygame.Rect(50, 250, 30, 30),
-            'favorites': pygame.Rect(50, 300, 30, 30)
+            '1': pygame.Rect(200, 50, 30, 30),
+            '2': pygame.Rect(300, 50, 30, 30),
+            '3': pygame.Rect(400, 50, 30, 30),
+            'favorites': pygame.Rect(500, 50, 30, 30)
         }
         self.selected_levels = ['1', '2', '3']
         self.show_favorites_only = False
@@ -48,7 +48,8 @@ class WordCardView:
         pygame.draw.rect(self.screen, (240, 248, 255), (100, 100, 600, 400))
         word_surface = self.font.render(word, True, (0, 0, 0))
         self.screen.blit(word_surface, (400 - word_surface.get_width() // 2, 260 - word_surface.get_height() // 2))
-        self.toggle_image(is_favorite)
+        if not self.show_favorites_only:
+            self.toggle_image(is_favorite)
         self.draw_buttons()
         self.display_page_number(current_index, total_cards)
         pygame.display.flip()
@@ -60,7 +61,8 @@ class WordCardView:
         meaning_surface = self.font_small.render(meaning, True, (0, 0, 0))
         self.screen.blit(word_surface, (400 - word_surface.get_width() // 2, 260 - word_surface.get_height() // 2))
         self.screen.blit(meaning_surface, (400 - meaning_surface.get_width() // 2, 360 - meaning_surface.get_height() // 2))
-        self.toggle_image(is_favorite)
+        if not self.show_favorites_only:
+            self.toggle_image(is_favorite)
         self.draw_buttons()
         self.display_page_number(current_index, total_cards)
         pygame.display.flip()
@@ -75,9 +77,13 @@ class WordCardView:
     def draw_buttons(self):
         self.screen.blit(self.left_arrow, (520, 520))
         self.screen.blit(self.right_arrow, (620, 520))
-        star_rect = self.current_image.get_rect(topleft=(620, 130))
-        self.screen.blit(self.current_image, star_rect.topleft)
-        sound_rect = self.sound_icon.get_rect(topleft=(680, 130))
+
+        star_rect = None  # 초기화
+        if not self.show_favorites_only:
+            star_rect = self.current_image.get_rect(topleft=(620, 130))
+            self.screen.blit(self.current_image, star_rect.topleft)
+
+        sound_rect = self.sound_icon.get_rect(topleft=(730, 130))  # 소리 아이콘 위치 조정
         self.screen.blit(self.sound_icon, sound_rect.topleft)
         self.screen.blit(self.home_icon, (680, 580))
 
@@ -85,7 +91,7 @@ class WordCardView:
             checkbox_image = self.checkbox_checked if level in self.selected_levels or (level == 'favorites' and self.show_favorites_only) else self.checkbox_unchecked
             self.screen.blit(checkbox_image, (rect.x, rect.y))
             label_surface = self.font_small.render(self.filter_labels[level], True, (0, 0, 0))
-            self.screen.blit(label_surface, (rect.x - 40, rect.y))
+            self.screen.blit(label_surface, (rect.x + 40, rect.y))
 
         pygame.display.flip()
         return star_rect, sound_rect  # 반환하여 컨트롤러에서 클릭을 감지할 수 있게 함

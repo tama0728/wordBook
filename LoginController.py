@@ -20,7 +20,7 @@ class Controller:
         self.popup = Popup()
         self.register_controller = RegisterController()
         self.done = False
-        self.logged_in_user = None
+        self.current_user = None  # 로그인한 사용자 정보를 저장
 
     def run(self):
         clock = pygame.time.Clock()
@@ -92,13 +92,14 @@ class Controller:
             print("로그인 성공")
             self.done = True
             self.logged_in_user = username  # 로그인한 사용자 저장
+            user_id = self.loginModel.get_user_id(username)  # 사용자 ID 가져오기
             if self.loginModel.get_admin(username):
                 print("관리자 로그인")
-                admin = AdminController()
+                admin = AdminController(user_id)  # 사용자 ID 전달
                 admin.run()
             else:
                 print("사용자 로그인")
-                user = UserController(username)  # 로그인한 사용자 정보를 전달
+                user = UserController(user_id)  # 사용자 ID 전달
                 user.run()
         else:
             print("로그인 실패")

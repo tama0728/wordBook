@@ -1,132 +1,97 @@
 import pygame
-from pygame.locals import *
+import random
 from ShortAnswerTestModel1 import ShortAnswerTestModel
 from ShortAnswerTestView1 import ShortAnswerTestView
-from hangulInputBox import HangulInputBox
 
-
-class ShortAnswerTestController:
+class ShortAnswerTest:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((800, 650))
-        pygame.display.set_caption("Short Answer Test")
-
+        self.screen = pygame.display.set_mode((800, 600))
+        pygame.display.set_caption("단어 테스트")
+        self.font = pygame.font.SysFont("D2Coding", 32)
+        self.view = ShortAnswerTestView(self.screen, self.font)
         self.model = ShortAnswerTestModel()
-        self.view = ShortAnswerTestView(self.screen)
         self.running = True
-        self.current_question_index = 0
+        self.selecting_mode = True
+        self.selecting_levels = False
+        self.selected_levels = []
+        self.current_word_index = 0
         self.score = 0
-        self.questions = []
-        self.user_input = ""
-        self.test_mode = None  # '한->영' or '영->한'
+        self.game_mode = None
+        self.words = []
+        self.clock = pygame.time.Clock()
 
-    def start_test(self, level, mode):
-        self.questions = self.model.fetch_words(level)
-        self.current_question_index = 0
-        self.score = 0
-        self.user_input = ""
-        self.test_mode = mode
-        self.run_test()
-
-    def check_answer(self):
-        question = self.questions[self.current_question_index]
-        user_answer = self.user_input
-
-        if self.test_mode == '한->영':
-            correct_answer = question.word
-        else:
-            correct_answer = question.mean
-
-        if user_answer.strip().lower() == correct_answer.strip().lower():
-            self.score += 10
-
-        self.user_input = ''
-        self.view.input_box.hanText = ''
-        self.current_question_index += 1
-
-        if self.current_question_index >= 10 or self.current_question_index >= len(self.questions):
-            self.view.display_result(self.score)
-            pygame.time.wait(3000)  # 3초 대기
-            self.running = False  # 프로그램 종료
-        else:
-            self.display_question()
-
-    def display_home(self):
-        self.view.display_home()
-
-    def display_question(self):
-        question = self.questions[self.current_question_index]
-        if self.test_mode == '한->영':
-            prompt = question.mean
-        else:
-            prompt = question.word
-        self.view.display_question(prompt, self.user_input)
-
-    def run_test(self):
-        self.display_question()
+    def run(self):
         while self.running:
-            keyEvent = None
+            key_event = None
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
-                elif event.type == pygame.KEYDOWN:
-                    keyEvent = event
-                    if event.key == pygame.K_RETURN:
-                        print(f"User input: {self.user_input}")  # 입력된 전체 문자열 출력
-                        self.check_answer()
-                        self.user_input = ""  # 다음 입력을 위해 초기화
-                elif event.type == MOUSEBUTTONDOWN:
-                    for level, rect in self.view.level_buttons.items():
-                        if rect.collidepoint(event.pos):
-                            self.view.selected_level = level
-                            self.display_home()  # 선택된 단계를 반영하기 위해 화면 갱신
-                    for mode, rect in self.view.mode_buttons.items():
-                        if rect.collidepoint(event.pos):
-                            self.view.selected_mode = mode
-                            self.display_home()  # 선택된 모드를 반영하기 위해 화면 갱신
-                    if self.view.start_button.collidepoint(event.pos) and self.view.selected_level and self.view.selected_mode:
-                        self.start_test(self.view.selected_level, self.view.selected_mode)
-                elif event.type == pygame.USEREVENT:
+                if event.type == pygame.KEYDOWN:
+                    key_event = event
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if self.selecting_mode:
+                        for rect, mode in self.view.mode_buttons:
+                            if rect.collidepoint(event.pos):
+                                self.game_mode = mode
+                                self.selecting_mode = False
+                                self.selecting_levels = True
+                    elif self.selecting_levels:
+                        for rect, level in self.view.level_buttons:
+                            if rect.collidepoint(event.pos):
+                                if level in self.selected_levels:
+                                    self.selected_levels.remove(level)
+                                else:
+                                    self.selected_levels.append(level)
+                        if self.selected_levels:
+                            start_text = self.font.render("Start", True, 'black')
+                            start_rect = start_text.get_rect(center=(400, 450))
+                            self.screen.blit(start_text, start_rect)
+                            if start_rect.collidepoint(event.pos):
+                                self.selecting_levels = False
+                                self.words = self.model.fetch_wordcards(limit=10, filter_levels=self.selected_levels)
+                if event.type == pygame.USEREVENT and not (self.selecting_mode or self.selecting_levels):
                     if event.name == 'enterEvent':
-                        print(event.text)  # 입력된 전체 문자열 출력
-                        self.check_answer()
+                        user_input = event.text.strip()
+                        print(f"입력한 값: {user_input}")
+                        if '한->영' in self.game_mode:
+                            correct_answer = self.words[self.current_word_index].word
+                        elif '영->한' in self.game_mode:
+                            correct_answer = self.words[self.current_word_index].mean
+                        if user_input == correct_answer:
+                            self.score += 1
+                            print("정답!")
+                        else:
+                            print("오답!")
+                        self.current_word_index += 1
+                        self.view.box.text = ''
+                        self.view.box.hanText = ''
+                        if self.current_word_index >= len(self.words):
+                            self.running = False
 
-            self.view.input_box.update(keyEvent)
-            self.display_question()
-        pygame.quit()
+            self.screen.fill('white')
 
-    def run(self):
-        self.display_home()
-        while self.running:
-            keyEvent = None
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    self.running = False
-                elif event.type == pygame.KEYDOWN:
-                    keyEvent = event
-                    if event.key == pygame.K_RETURN:
-                        print(f"User input: {self.user_input}")  # 입력된 전체 문자열 출력
-                        self.user_input = ""  # 다음 입력을 위해 초기화
-                elif event.type == MOUSEBUTTONDOWN:
-                    for level, rect in self.view.level_buttons.items():
-                        if rect.collidepoint(event.pos):
-                            self.view.selected_level = level
-                            self.display_home()  # 선택된 단계를 반영하기 위해 화면 갱신
-                    for mode, rect in self.view.mode_buttons.items():
-                        if rect.collidepoint(event.pos):
-                            self.view.selected_mode = mode
-                            self.display_home()  # 선택된 모드를 반영하기 위해 화면 갱신
-                    if self.view.start_button.collidepoint(event.pos) and self.view.selected_level and self.view.selected_mode:
-                        self.start_test(self.view.selected_level, self.view.selected_mode)
-                elif event.type == pygame.USEREVENT:
-                    if event.name == 'enterEvent':
-                        print(event.text)  # 입력된 전체 문자열 출력
+            if self.selecting_mode:
+                self.view.render_mode_selection()
+            elif self.selecting_levels:
+                self.view.render_level_selection(self.selected_levels)
+                if self.selected_levels:
+                    start_text = self.font.render("Start", True, 'black')
+                    start_rect = start_text.get_rect(center=(400, 450))
+                    self.screen.blit(start_text, start_rect)
+                    if event.type == pygame.MOUSEBUTTONDOWN and start_rect.collidepoint(event.pos):
+                        self.selecting_levels = False
+                        self.words = self.model.fetch_wordcards(limit=10, filter_levels=self.selected_levels)
+            else:
+                if self.current_word_index < len(self.words):
+                    self.view.render_word(self.game_mode, self.words[self.current_word_index], '주관식' in self.game_mode)
+                else:
+                    self.view.render_score(self.score, len(self.words))
 
-            self.view.input_box.update(keyEvent)
             pygame.display.update()
-        pygame.quit()
-
+            self.clock.tick(30)
 
 if __name__ == "__main__":
-    controller = ShortAnswerTestController()
+    controller = ShortAnswerTest()
     controller.run()
+    pygame.quit()

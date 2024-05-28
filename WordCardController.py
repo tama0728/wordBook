@@ -5,18 +5,19 @@ from WordCardView import WordCardView
 import pyttsx3
 from Popup import Popup
 from UserController import UserController
+from Search import search
 
 class WordCardController:
-    def __init__(self, username):
+    def __init__(self, id):
         pygame.init()
         self.screen = pygame.display.set_mode((800, 650))
         pygame.display.set_caption("Word Cards")
 
-        self.username = username
+        self.id = id
         self.model = WordCardModel()
         self.view = WordCardView(self.screen)
         self.current_card_index = 0
-        self.wordcards = self.model.fetch_wordcards(filter_levels=['1', '2', '3'], username=username)
+        self.wordcards = self.model.fetch_wordcards(filter_levels=['1', '2', '3'], id=id)
         self.engine = pyttsx3.init()
         self.running = True
         self.showing_meaning = False
@@ -43,34 +44,14 @@ class WordCardController:
             self.display_word()
 
     def show_previous_card(self):
-        if self.current_card_index == 0:
-            self.popup.show("첫 페이지입니다.")
-        else:
-            self.current_card_index = (self.current_card_index - 1) % len(self.wordcards)
+        if self.current_card_index > 0:
+            self.current_card_index -= 1
             self.showing_meaning = False
             self.display_word()
 
     def show_next_card(self):
-        if self.current_card_index == len(self.wordcards) - 1:
-            self.popup.show("마지막 페이지입니다.")
-        else:
-            self.current_card_index = (self.current_card_index + 1) % len(self.wordcards)
-            self.showing_meaning = False
-            self.display_word()
-
-    def show_previous_ten_cards(self):
-        if self.current_card_index == 0:
-            self.popup.show("첫 페이지입니다.")
-        else:
-            self.current_card_index = max(0, self.current_card_index - 10)
-            self.showing_meaning = False
-            self.display_word()
-
-    def show_next_ten_cards(self):
-        if self.current_card_index >= len(self.wordcards) - 10:
-            self.popup.show("마지막 페이지입니다.")
-        else:
-            self.current_card_index = min(len(self.wordcards) - 1, self.current_card_index + 10)
+        if self.current_card_index < len(self.wordcards) - 1:
+            self.current_card_index += 1
             self.showing_meaning = False
             self.display_word()
 
@@ -83,16 +64,16 @@ class WordCardController:
     def toggle_favorite(self):
         current_wordcard = self.wordcards[self.current_card_index]
         if current_wordcard.is_favorite:
-            self.model.remove_from_favorite(self.username, current_wordcard.word)
+            self.model.remove_from_favorite(self.id, current_wordcard.word)
             current_wordcard.is_favorite = False
         else:
-            self.model.add_to_favorite(self.username, current_wordcard.word)
+            self.model.add_to_favorite(self.id, current_wordcard.word)
             current_wordcard.is_favorite = True
         self.view.toggle_image(current_wordcard.is_favorite)
         self.display_word()
 
     def filter_wordcards(self):
-        self.wordcards = self.model.fetch_wordcards(self.selected_levels, username=self.username, only_favorites=self.show_favorites_only)
+        self.wordcards = self.model.fetch_wordcards(self.selected_levels, id=self.id, only_favorites=self.show_favorites_only)
         self.current_card_index = 0
         self.display_word()
 
@@ -110,9 +91,7 @@ class WordCardController:
         self.display_word()
 
     def go_to_home(self):
-        from UserController import UserController  # 지연 가져오기
-        pygame.quit()
-        UserController(self.username).run()  # UserController로 이동
+        self.running = False
 
     def run(self):
         while self.running:
@@ -126,10 +105,6 @@ class WordCardController:
                         self.show_next_card()
                     elif event.key == K_SPACE:
                         self.show_meaning()
-                    elif event.key == K_UP:
-                        self.show_previous_ten_cards()
-                    elif event.key == K_DOWN:
-                        self.show_next_ten_cards()
                 elif event.type == MOUSEBUTTONDOWN:
                     if 520 <= event.pos[0] <= 570 and 520 <= event.pos[1] <= 570:
                         self.show_previous_card()
@@ -137,7 +112,7 @@ class WordCardController:
                         self.show_next_card()
                     elif 620 <= event.pos[0] <= 670 and 130 <= event.pos[1] <= 180:
                         self.toggle_favorite()
-                    elif 680 <= event.pos[0] <= 720 and 130 <= event.pos[1] <= 170:
+                    elif 730 <= event.pos[0] <= 780 and 130 <= event.pos[1] <= 180:  # 소리 아이콘 위치 조정
                         self.play_word_pronunciation()
                     elif 680 <= event.pos[0] <= 730 and 580 <= event.pos[1] <= 630:
                         self.go_to_home()
@@ -148,8 +123,12 @@ class WordCardController:
                         if rect.collidepoint(event.pos):
                             self.toggle_level(level)
             self.popup.draw(self.screen)
+
+        # UserController를 실행하기 전에 Pygame을 종료하지 않음
+        user_controller = UserController(self.id)
+        user_controller.run()
         pygame.quit()
 
 if __name__ == "__main__":
-    controller = WordCardController(username="test_user")
+    controller = WordCardController(id=1)  # 예시 id
     controller.run()

@@ -2,7 +2,6 @@ import pygame
 from pygame.locals import *
 from ShortAnswerTestModel import ShortAnswerTestModel
 from ShortAnswerTestView import ShortAnswerTestView
-import subprocess
 
 class ShortAnswerTestController:
     def __init__(self):
@@ -49,15 +48,15 @@ class ShortAnswerTestController:
     def run_test(self):
         self.display_question()
         while self.running:
+            keyEvent = None
             for event in pygame.event.get():
                 if event.type == QUIT:
                     self.running = False
                 elif event.type == KEYDOWN:
-                    self.view.input_box.handle_input(event)
-                    self.user_input = self.view.input_box.get_content()
+                    keyEvent = event
                     if event.key == K_RETURN:
                         self.check_answer()
-                    self.display_question()
+                        self.display_question()
                 elif event.type == MOUSEBUTTONDOWN:
                     for level, rect in self.view.level_buttons.items():
                         if rect.collidepoint(event.pos):
@@ -65,6 +64,11 @@ class ShortAnswerTestController:
                             self.display_home()  # 선택된 단계를 반영하기 위해 화면 갱신
                     if self.view.start_button.collidepoint(event.pos) and self.view.selected_level:
                         self.start_test(self.view.selected_level)
+
+                self.view.input_box.update(keyEvent)
+                self.user_input = self.view.input_box.text
+
+            pygame.display.update()
         pygame.quit()
 
     def run(self):

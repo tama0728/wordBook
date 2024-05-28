@@ -24,7 +24,7 @@ class HangulInputBox(pygame.sprite.Sprite):
 
     def __init__(self, font:str, fontSize:int, width:int, fColor:str, bColor:str):
         pygame.sprite.Sprite.__init__(self)
-        self.font = pygame.font.Font(font, fontSize)
+        self.font = pygame.font.SysFont(font, fontSize)
         self.fontSize:int = fontSize
         self.width = width * self.fontSize
         self.height = fontSize

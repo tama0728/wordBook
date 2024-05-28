@@ -1,6 +1,5 @@
 import pygame
-import random
-from Input import Input
+from hangulInputBox import HangulInputBox
 
 class ShortAnswerTestView:
     def __init__(self, screen):
@@ -15,7 +14,8 @@ class ShortAnswerTestView:
             '3': pygame.Rect(400, 150, 100, 50),
         }
         self.start_button = pygame.Rect(300, 250, 200, 50)
-        self.input_box = Input("Answer:", self, pygame.Rect(100, 400, 600, 50))
+        self.input_box = HangulInputBox('NanumBarunGothic.ttf', 32, 400 // 16, 'black', 'gray')
+        self.input_box.rect.center = (400, 500)
 
         self.selected_level = None
 
@@ -44,8 +44,12 @@ class ShortAnswerTestView:
         self.screen.fill((255, 255, 255))
         question_surface = self.font.render(question, True, (0, 0, 0))
         self.screen.blit(question_surface, (400 - question_surface.get_width() // 2, 200))
-        self.input_box.set_content(user_input)
+
+        # Draw light blue rectangle
+        pygame.draw.rect(self.screen, (173, 216, 230), (100, 400, 600, 50))  # Light blue rectangle
+        self.input_box.text = user_input
         self.input_box.draw(self.screen)
+
         pygame.display.flip()
 
     def display_result(self, score):

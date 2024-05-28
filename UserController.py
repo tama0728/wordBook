@@ -1,14 +1,16 @@
 import pygame
+from Button import Button
 from Popup import Popup
 from UserView import UserView
 from View import View
+from ShortAnswerTestController import ShortAnswerTestController  # Import the test controller
 
 class UserController:
-    def __init__(self, username):
+    def __init__(self, id):
         self.view = View()
         self.userView = UserView(self.view)
         self.popup = Popup()
-        self.username = username
+        self.id = id
 
     def run(self):
         done = False
@@ -36,10 +38,12 @@ class UserController:
                     elif self.userView.card_button.is_collide(event.pos):
                         print("단어카드 버튼 클릭")
                         from WordCardController import WordCardController  # 지연 가져오기
-                        controller = WordCardController(self.username)
+                        controller = WordCardController(self.id)
                         controller.run()
                     elif self.userView.test_button.is_collide(event.pos):
                         print("테스트 버튼 클릭")
+                        test_controller = ShortAnswerTestController()  # Instantiate the test controller
+                        test_controller.run()  # Run the test
                     elif self.userView.game_button.is_collide(event.pos):
                         print("게임 버튼 클릭")
                 if event.type == pygame.MOUSEMOTION:
@@ -49,6 +53,6 @@ class UserController:
                     self.userView.game_button.is_hover(event.pos)
 
 if __name__ == "__main__":
-    controller = UserController(username="test_user")
+    controller = UserController(id=1)  # Example id
     controller.run()
     pygame.quit()

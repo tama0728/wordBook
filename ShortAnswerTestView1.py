@@ -1,70 +1,69 @@
 import pygame
-from hangulInputBox import *
+from hangulInputBox import HangulInputBox
 
 class ShortAnswerTestView:
-    def __init__(self, screen):
+    def __init__(self, screen, font):
         self.screen = screen
-        self.font = pygame.font.SysFont("Malgun Gothic", 48)
-        self.font_small = pygame.font.SysFont("Malgun Gothic", 28)
-        self.font_tiny = pygame.font.SysFont("Malgun Gothic", 18)
+        self.font = font
+        self.box = HangulInputBox('NanumBarunGothic.ttf', 32, 25, 'black', 'gray')
+        self.box.rect.center = (400, 450)
+        self.modes = ['영->한'+"\n"+'주관식', '한->영' +"\n"+'주관식', '영->한'+"\n"+'객관식', '한->영'+"\n"+'객관식']
+        self.levels = [1, 2, 3]
+        self.mode_buttons = self.create_buttons(self.modes, 2, 2)
+        self.level_buttons = self.create_buttons(self.levels, 1, 3)
+        self.start_button = pygame.Rect(350, 500, 100, 50)
 
-        self.level_buttons = {
-            '1': pygame.Rect(100, 150, 100, 50),
-            '2': pygame.Rect(250, 150, 100, 50),
-            '3': pygame.Rect(400, 150, 100, 50),
-        }
-        self.mode_buttons = {
-            '한->영': pygame.Rect(100, 350, 150, 50),
-            '영->한': pygame.Rect(300, 350, 150, 50),
-        }
-        self.start_button = pygame.Rect(300, 450, 200, 50)
-        self.input_box = HangulInputBox('NanumBarunGothic.ttf', 32, 20, 'black', 'gray')
-        self.input_box.rect.center = (400, 400)  # 화면 중앙에 위치
+    def create_buttons(self, items, cols, rows):
+        buttons = []
+        for i, item in enumerate(items):
+            row = i // cols
+            col = i % cols
+            rect = pygame.Rect((200 + col * 200, 150 + row * 100), (250, 50))
+            buttons.append((rect, item))
+        return buttons
 
-        self.selected_level = None
-        self.selected_mode = None
+    def render_mode_selection(self):
+        self.screen.fill('white')
+        for rect, mode in self.mode_buttons:
+            pygame.draw.rect(self.screen, 'skyblue', rect)
+            mode_text = self.font.render(mode, True, 'black')
+            mode_text_rect = mode_text.get_rect(center=rect.center)
+            self.screen.blit(mode_text, mode_text_rect)
 
-    def draw_text(self, text, rect, position):
-        if position == 'left_out':
-            pos = (rect.x - rect.width // 2 + 10, rect.y + rect.height // 2 - 10)
-        else:  # 'left_in'
-            pos = (rect.x + 10, rect.y + rect.height // 2 - 10)
-        text_surface = self.font_small.render(text, True, (0, 0, 0))
-        self.screen.blit(text_surface, pos)
+    def render_level_selection(self, selected_levels):
+        self.screen.fill('white')
+        for rect, level in self.level_buttons:
+            color = 'green' if level in selected_levels else 'skyblue'
+            pygame.draw.rect(self.screen, color, rect)
+            level_text = self.font.render(f"Level {level}", True, 'black')
+            level_text_rect = level_text.get_rect(center=rect.center)
+            self.screen.blit(level_text, level_text_rect)
+        if selected_levels:
+            start_text = self.font.render("Start", True, 'black')
+            start_rect = start_text.get_rect(center=self.start_button.center)
+            pygame.draw.rect(self.screen, 'skyblue', self.start_button)
+            self.screen.blit(start_text, start_rect)
 
-    def display_home(self):
-        self.screen.fill((255, 255, 255))
-        for level, rect in self.level_buttons.items():
-            color = (0, 255, 0) if self.selected_level == level else (0, 0, 0)
-            pygame.draw.rect(self.screen, color, rect, 2)
-            label_surface = self.font_small.render(f"Level {level}", True, color)
-            self.screen.blit(label_surface, (rect.x + 10, rect.y + 10))
+    def render_word(self, game_mode, word, is_subjective):
+        self.screen.fill('white')
+        rect = pygame.Rect(200, 150, 400, 200)
+        pygame.draw.rect(self.screen, 'skyblue', rect)
+        display_text = word.mean if '한->영' in game_mode else word.word
+        word_text = self.font.render(display_text, True, 'black')
+        word_text_rect = word_text.get_rect(center=rect.center)
+        self.screen.blit(word_text, word_text_rect)
+        if is_subjective:
+            self.box.rect.midtop = (400, 350)
+            self.screen.blit(self.box.image, self.box.rect)
+        else:
+            # 객관식 선택지 표시
+            pass
 
-        for mode, rect in self.mode_buttons.items():
-            color = (0, 255, 0) if self.selected_mode == mode else (0, 0, 0)
-            pygame.draw.rect(self.screen, color, rect, 2)
-            mode_surface = self.font_small.render(mode, True, color)
-            self.screen.blit(mode_surface, (rect.x + 10, rect.y + 10))
+    def render_score(self, score, total):
+        self.screen.fill('white')
+        score_text = self.font.render(f"점수: {score}/{total}", True, 'black')
+        score_text_rect = score_text.get_rect(center=(400, 300))
+        self.screen.blit(score_text, score_text_rect)
 
-        pygame.draw.rect(self.screen, (0, 0, 0), self.start_button, 2)
-        start_surface = self.font_small.render("Start", True, (0, 0, 0))
-        self.screen.blit(start_surface, (self.start_button.x + 60, self.start_button.y + 10))
-        pygame.display.flip()
-
-    def display_question(self, question, user_input):
-        self.screen.fill((255, 255, 255))
-        question_surface = self.font.render(question, True, (0, 0, 0))
-        self.screen.blit(question_surface, (400 - question_surface.get_width() // 2, 200))
-        self.input_box.update(None)
-        self.input_box.image.fill(self.input_box.bColor)
-        self.input_box.image.blit(self.input_box.textImage, self.input_box.textRect)
-        if time.time() % 1 > 0.5:
-            pygame.draw.rect(self.input_box.image, 'black', self.input_box.cursor)
-        self.screen.blit(self.input_box.image, self.input_box.rect)
-        pygame.display.flip()
-
-    def display_result(self, score):
-        self.screen.fill((255, 255, 255))
-        result_surface = self.font.render(f"Your Score: {score}", True, (0, 0, 0))
-        self.screen.blit(result_surface, (400 - result_surface.get_width() // 2, 200))
-        pygame.display.flip()
+    def update_input_box(self, event):
+        self.box.update(event)

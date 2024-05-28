@@ -7,12 +7,12 @@ from EditController import EditController
 from Popup import Popup
 from View import View
 
-
 class AdminController:
-    def __init__(self):
+    def __init__(self, user_id):  # user_id를 인자로 받음
         self.view = View()
         self.adminView = AdminView(self.view)
         self.popup = Popup()
+        self.user_id = user_id  # user_id 저장
 
     def run(self):
         pygame.display.set_caption("관리자")

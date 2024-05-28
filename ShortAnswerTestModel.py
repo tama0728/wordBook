@@ -1,6 +1,7 @@
 import mysql.connector
 from config import config
 import random
+
 class Word:
     def __init__(self, word, mean):
         self.word = word
@@ -16,7 +17,6 @@ class ShortAnswerTestModel:
         words = [Word(word, mean) for word, mean in self.cursor.fetchall()]
         random.shuffle(words)  # 단어들을 랜덤하게 섞습니다.
         return words[:10]  # 10개의 랜덤 단어만 반환합니다.
-
 
     def close(self):
         self.cursor.close()
