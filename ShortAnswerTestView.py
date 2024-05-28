@@ -5,8 +5,8 @@ class ShortAnswerTestView:
     def __init__(self, screen, font):
         self.screen = screen
         self.font = font
-        self.box = HangulInputBox('D2Coding', 32, 25, 'black', 'gray')
-        self.box.rect.center = (400, 400)  # 텍스트 입력창 위치 조정
+        self.box = HangulInputBox('D2Coding', 32, 14, 'black', 'gray')
+        self.box.rect.center = (100, 200)  # 텍스트 입력창 위치 조정
         self.modes = ['영 -> 한\n객관식', '한 -> 영\n객관식', '영 -> 한\n주관식', '한 -> 영\n주관식']
         self.levels = ['Level 1', 'Level 2', 'Level 3', 'Favorites', 'Wrong']
         self.mode_buttons = self.create_buttons(self.modes, 2, 2)
@@ -23,17 +23,26 @@ class ShortAnswerTestView:
 
     def create_buttons(self, items, cols, rows):
         buttons = []
+        screen_width, screen_height = self.screen.get_size()
+        button_width = screen_width // (cols + 1)
+        button_height = screen_height // (rows + 3)
+        x_margin = (screen_width - (cols * button_width)) // (cols + 1)
+        y_margin = (screen_height - (rows * button_height)) // (rows + 2)
+
         for i, item in enumerate(items):
             row = i % rows
             col = i // rows
-            rect = pygame.Rect((100 + col * 300, 150 + row * 80), (200, 50))  # 버튼 크기와 위치 조정
+            x = x_margin + col * (button_width + x_margin)
+            y = y_margin + row * (button_height + y_margin)
+            rect = pygame.Rect(x, y, button_width, button_height)
             buttons.append((rect, item))
         return buttons
 
     def render_mode_selection(self):
         self.screen.fill('white')
         for rect, mode in self.mode_buttons:
-            pygame.draw.rect(self.screen, (173, 216, 230), rect, border_radius=10)  # 하늘색 배경과 둥근 모서리
+            pygame.draw.rect(self.screen, (0, 128, 255), rect, border_radius=10)  # 진한 파란색 배경과 둥근 모서리
+            pygame.draw.rect(self.screen, (255, 255, 255), rect.inflate(-6, -6), border_radius=10)  # 흰색 안쪽 배경
             lines = mode.split('\n')
             for idx, line in enumerate(lines):
                 mode_text = self.font.render(line, True, 'black')
@@ -75,7 +84,8 @@ class ShortAnswerTestView:
         self.screen.blit(progress_text, progress_text_rect)
 
         # 텍스트 입력창
-        self.box.rect.midtop = (400, 400)
+        self.box.rect.midtop = (330, 400)  # slightly move the text input box to the left
+        self.box.rect.width = 300  # 텍스트 입력창 너비 조정
         self.box.update(None)  # 화면에 그리기 위해 update 호출
         self.screen.blit(self.box.image, self.box.rect)
 
