@@ -1,4 +1,5 @@
 import pygame
+from Input import Input  # Assuming Input class is in the same directory
 
 class WordCardView:
     def __init__(self, screen):
@@ -46,6 +47,26 @@ class WordCardView:
         self.current_image = self.star_black
         self.showing_meaning = False
 
+        # Search input and button
+        self.search_box = Input("", self, pygame.Rect(50, 600, 200, 32))
+        self.search_button = pygame.Rect(260, 600, 80, 32)
+
+    def draw_text_centered(self, surface, text, font, color, rect):
+        text_surface = font.render(text, True, color)
+        text_rect = text_surface.get_rect(center=rect.center)
+        surface.blit(text_surface, text_rect)
+
+    def draw_text(self, text, rect, align, font_size=20):
+        font = pygame.font.SysFont("d2coding", font_size)
+        text_surface = font.render(text, True, (0, 0, 0))
+        if align == 'left_out':
+            text_rect = text_surface.get_rect(midleft=rect.midright)
+        elif align == 'left_in':
+            text_rect = text_surface.get_rect(midleft=rect.midleft)
+        elif align == 'center':
+            text_rect = text_surface.get_rect(center=rect.center)
+        self.screen.blit(text_surface, text_rect)
+
     def display_word(self, word, current_index, total_cards, is_favorite):
         self.screen.fill((255, 255, 255))
         pygame.draw.rect(self.screen, (240, 248, 255), (100, 100, 600, 400))
@@ -55,7 +76,14 @@ class WordCardView:
             self.toggle_image(is_favorite)
         self.draw_buttons()
         self.display_page_number(current_index, total_cards)
+        self.draw_search()
         pygame.display.flip()
+
+    def draw_search(self):
+        # Draw search box and button
+        self.search_box.draw(self.screen)
+        pygame.draw.rect(self.screen, pygame.Color('lightskyblue3'), self.search_button)
+        self.draw_text_centered(self.screen, "검색", self.font_small, (0, 0, 0), self.search_button)
 
     def display_meaning(self, word, meaning, current_index, total_cards, is_favorite):
         self.screen.fill((255, 255, 255))
@@ -68,6 +96,7 @@ class WordCardView:
             self.toggle_image(is_favorite)
         self.draw_buttons()
         self.display_page_number(current_index, total_cards)
+        self.draw_search()
         pygame.display.flip()
 
     def display_no_wordcards(self):
@@ -75,6 +104,7 @@ class WordCardView:
         no_wordcards_surface = self.font_small.render("No wordcards found", True, (0, 0, 0))
         self.screen.blit(no_wordcards_surface, (400 - no_wordcards_surface.get_width() // 2, 260 - no_wordcards_surface.get_height() // 2))
         self.draw_buttons()
+        self.draw_search()
         pygame.display.flip()
 
     def draw_buttons(self):

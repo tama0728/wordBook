@@ -5,7 +5,6 @@ from WordCardView import WordCardView
 import pyttsx3
 from Popup import Popup
 from UserController import UserController
-from Search import search
 
 class WordCardController:
     def __init__(self, id):
@@ -100,6 +99,15 @@ class WordCardController:
         self.filter_wordcards()
         self.display_word()
 
+    def search_word(self):
+        word = self.view.search_box.get_content()
+        if word:
+            self.wordcards = self.model.search_wordcards(word, self.id, self.selected_levels, self.show_favorites_only, self.show_wrong_only)
+            self.current_card_index = 0
+            self.display_word()
+        else:
+            self.filter_wordcards()
+
     def go_to_home(self):
         self.running = False
 
@@ -115,6 +123,11 @@ class WordCardController:
                         self.show_next_card()
                     elif event.key == K_SPACE:
                         self.show_meaning()
+                    elif event.key == K_RETURN:
+                        self.search_word()
+                    else:
+                        self.view.search_box.handle_input(event)
+                        self.display_word()
                 elif event.type == MOUSEBUTTONDOWN:
                     if 520 <= event.pos[0] <= 570 and 520 <= event.pos[1] <= 570:
                         self.show_previous_card()
@@ -126,6 +139,8 @@ class WordCardController:
                         self.play_word_pronunciation()
                     elif 680 <= event.pos[0] <= 730 and 580 <= event.pos[1] <= 630:
                         self.go_to_home()
+                    elif self.view.search_button.collidepoint(event.pos):
+                        self.search_word()
                     else:
                         if 100 <= event.pos[0] <= 700 and 100 <= event.pos[1] <= 500:
                             self.show_meaning()
