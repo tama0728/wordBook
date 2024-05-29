@@ -45,6 +45,9 @@ class UserController:
                         WordCardController.run()
                     elif self.userView.test_button.is_collide(event.pos):
                         print("테스트 버튼 클릭")
+                        from Test.Short.ShortAnswerTestController import ShortAnswerTestController
+                        ShortAnswerTestController = ShortAnswerTestController(self.user_id)
+                        ShortAnswerTestController.run()
                     elif self.userView.game_button.is_collide(event.pos):
                         print("게임 버튼 클릭")
                     self.view.set_display_size()
