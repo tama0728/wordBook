@@ -6,10 +6,11 @@ from Api.Popup import Popup
 
 
 class UserController:
-    def __init__(self):
+    def __init__(self, user_id):
         self.view = View()
         self.userView = UserView(self.view)
         self.popup = Popup()
+        self.user_id = user_id
 
     def run(self):
         done = False
@@ -34,6 +35,10 @@ class UserController:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.userView.book_button.is_collide(event.pos):
                         print("단어장 버튼 클릭")
+                        from BasicWordbook.BasicWordbookController import BasicWordbookController
+                        controller = BasicWordbookController(self.user_id)
+                        controller.run()
+                        self.view.set_display_size()
                     elif self.userView.card_button.is_collide(event.pos):
                         print("단어카드 버튼 클릭")
                     elif self.userView.test_button.is_collide(event.pos):

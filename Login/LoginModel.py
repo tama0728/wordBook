@@ -10,11 +10,15 @@ class LoginModel:
 
     def login(self, username, password):
         # password = sha256(password.encode('utf-8')).hexdigest()
-        query = "SELECT * FROM users WHERE username = %s AND password = %s"
+        query = "SELECT id FROM users WHERE username = %s AND password = %s"
         self.cursor.execute(query, (username, password))
-        return self.cursor.fetchone() is not None
+        res = self.cursor.fetchone()
+        if res is not None:
+            return res[0]
+        else:
+            return False
 
-    def get_admin(self, username):
-        query = "SELECT admin FROM users WHERE username = '%s'" % username
-        res = self.cursor.execute(query)
-        return self.cursor.fetchone()[0] == 1
+    def get_admin(self, id):
+        query = "SELECT admin FROM users WHERE id = %d" % id
+        self.cursor.execute(query)
+        return self.cursor.fetchone()[0]

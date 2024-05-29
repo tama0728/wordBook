@@ -89,17 +89,18 @@ class Controller:
                     self.loginView.register_button.is_hover(event.pos)
 
     def login(self, username, password):
-        if self.loginModel.login(username, password):
+        id = self.loginModel.login(username, password)
+        if id:
             print("로그인 성공")
             # self.done = True
-            res = self.loginModel.get_admin(username)
-            if self.loginModel.get_admin(username):
+            res = self.loginModel.get_admin(id)
+            if self.loginModel.get_admin(id):
                 print("관리자 로그인")
                 admin = AdminController()
                 admin.run()
             else:
                 print("사용자 로그인")
-                user = UserController()
+                user = UserController(id)
                 user.run()
         else:
             print("로그인 실패")
