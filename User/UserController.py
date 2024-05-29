@@ -6,11 +6,12 @@ from Api.Popup import Popup
 
 
 class UserController:
-    def __init__(self, user_id):
+    def __init__(self, view, user_id, username):
         self.view = View()
-        self.userView = UserView(self.view)
+        self.userView = UserView(view)
         self.popup = Popup()
         self.user_id = user_id
+        self.username = username
 
     def run(self):
         done = False
@@ -50,6 +51,9 @@ class UserController:
                         ShortAnswerTestController.run()
                     elif self.userView.game_button.is_collide(event.pos):
                         print("게임 버튼 클릭")
+                        from Game.GameController import GameController
+                        gameHomeController = GameController(self.user_id, self.username)
+                        gameHomeController.run()
                     self.view.set_display_size()
                 if event.type == pygame.MOUSEMOTION:
                     self.userView.book_button.is_hover(event.pos)

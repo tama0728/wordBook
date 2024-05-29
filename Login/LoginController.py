@@ -100,7 +100,7 @@ class Controller:
                 admin.run()
             else:
                 print("사용자 로그인")
-                user = UserController(id)
+                user = UserController(self.view, id, username)
                 user.run()
         else:
             print("로그인 실패")
