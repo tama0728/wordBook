@@ -36,15 +36,18 @@ class UserController:
                     if self.userView.book_button.is_collide(event.pos):
                         print("단어장 버튼 클릭")
                         from BasicWordbook.BasicWordbookController import BasicWordbookController
-                        controller = BasicWordbookController(self.user_id)
-                        controller.run()
-                        self.view.set_display_size()
+                        BasicWordbookController = BasicWordbookController(self.user_id)
+                        BasicWordbookController.run()
                     elif self.userView.card_button.is_collide(event.pos):
                         print("단어카드 버튼 클릭")
+                        from WordCard.WordCardController import WordCardController  # 지연 가져오기
+                        WordCardController = WordCardController(self.user_id)
+                        WordCardController.run()
                     elif self.userView.test_button.is_collide(event.pos):
                         print("테스트 버튼 클릭")
                     elif self.userView.game_button.is_collide(event.pos):
                         print("게임 버튼 클릭")
+                    self.view.set_display_size()
                 if event.type == pygame.MOUSEMOTION:
                     self.userView.book_button.is_hover(event.pos)
                     self.userView.card_button.is_hover(event.pos)
