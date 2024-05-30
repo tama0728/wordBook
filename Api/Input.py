@@ -56,12 +56,14 @@ class Input:
                     self.hanText = self.hanText[:-1]
                 elif len(self.content) > 0:
                     self.content = self.content[:-1]
+            elif event.key == pygame.K_ESCAPE:  # 한영 변환 인식 Left Shift + space
+                self.hanMode = not self.hanMode
+                self.hanText = ''
             else:
                 if self.hanMode:
                     self.hanText += event.unicode
                 else:
                     self.content += event.unicode
-            #----------
             self.content += self.eng2kor(self.hanText)
 
     def get_content(self):
