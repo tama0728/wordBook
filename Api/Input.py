@@ -51,11 +51,15 @@ class Input:
 
     def handle_kor(self, event):
         if event.type == pygame.KEYDOWN:  # 키다운 이벤트라면, key, mod, ucicode, scancode 속성을 가진다.
-            if event.key == pygame.K_BACKSPACE:
+            if event.key == pygame.K_RETURN or event.key == pygame.K_CARET:
+                text2 = self.content + self.eng2kor(self.hanText)
+                self.content = text2
+                self.hanText = ''
+            elif event.key == pygame.K_BACKSPACE:
                 if self.hanMode and len(self.hanText) > 0:
                     self.hanText = self.hanText[:-1]
-                elif len(self.text) > 0:
-                    self.text = self.content[:-1]
+                elif len(self.content) > 0:
+                    self.content = self.content[:-1]
             elif event.key == pygame.K_ESCAPE:  # 한영 변환 인식 Left Shift + space
                 if self.hanMode:  # 영문모드로 토글
                     self.content += self.eng2kor(self.hanText)
@@ -68,9 +72,6 @@ class Input:
                     self.hanText += event.unicode
                 else:
                     self.content += event.unicode
-            # ----------
-            text2 = self.content + self.eng2kor(self.hanText)
-            self.content = text2
 
     def get_content(self):
         return self.content
