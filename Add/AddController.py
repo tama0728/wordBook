@@ -7,6 +7,8 @@ from View import View
 from Api.CheckBox import CheckBox
 from Api.Input import Input
 from Api.Popup import Popup
+from Api.hangulInputBox import HangulInputBox as hangulInputBox
+
 
 
 class AddController:
@@ -16,11 +18,10 @@ class AddController:
         self.popup = Popup()
         self.res = res
 
-        self.input_box = [Input("단어  ", self.view, self.addView.word_box),
-                          Input("뜻  ", self.view, self.addView.mean_box, korean=True),
-                          # Input("예문  ", self.view, self.addView.sentence_box)
+        self.input_box = Input("단어  ", self.view, self.addView.word_box)
+        self.meanBox = hangulInputBox("d2coding", 32, 14, 'black', 'gray')
+        self.meanBox.rect.center = self.addView.mean_box.center
 
-                          ]
         self.checkBoxs = [CheckBox("Lv.1 ", self.view, self.addView.checkBox),
                          CheckBox("Lv.2 ", self.view, self.addView.checkBox.move(100, 0)),
                          CheckBox("Lv.3 ", self.view, self.addView.checkBox.move(200, 0))
@@ -32,8 +33,8 @@ class AddController:
             pygame.display.set_caption("단어 추가")
         else:
             pygame.display.set_caption("단어 수정")
-            self.input_box[0].set_content(self.res[0])
-            self.input_box[1].set_content(self.res[1])
+            self.input_box.set_content(self.res[0])
+            self.meanBox.set_content(self.res[1])
             self.lv = self.res[2]
             self.checkBoxs[self.lv - 1].check()
 
@@ -52,12 +53,12 @@ class AddController:
             for i in range(len(self.checkBoxs)):
                 self.checkBoxs[i].draw()
 
-            for i in range(len(self.input_box)):
-                if i == active:
-                    self.input_box[i].set_active()
-                else:
-                    self.input_box[i].set_inactive()
-                self.input_box[i].draw(self.view.screen)
+            if 0 == active:
+                self.input_box.set_active()
+            # else:
+            #     self.meanBox.update(None)
+            self.input_box.draw(self.view.screen)
+            self.meanBox.draw(self.view.screen)
 
             self.popup.draw(self.view.screen)
 
@@ -91,18 +92,19 @@ class AddController:
                         active = 0
                     elif self.addView.mean_box.collidepoint(event.pos):
                         active = 1
-                    elif self.addView.sentence_box.collidepoint(event.pos):
-                        active = 2
                 if event.type == pygame.MOUSEMOTION:
                     self.addView.add_button.is_hover(event.pos)
                     self.addView.cancel_button.is_hover(event.pos)
 
                 if event.type == pygame.KEYDOWN:
-                    self.input_box[active].handle_input(event)
+                    if active == 0:
+                        self.input_box.handle_input(event)
+                    elif active == 1:
+                        self.meanBox.update(event)
                     if event.key == pygame.K_TAB:
-                        active = (active + 1) % len(self.input_box)
+                        active = (active + 1) % 2
                     if event.key == pygame.K_RETURN:
-                        if active == len(self.input_box) - 1:
+                        if active == 1:
                             if self.res is not None:
                                 done = self.edit_word(self.res[0])
                             else:
@@ -110,8 +112,8 @@ class AddController:
 
     def add_word(self):
         print("추가 버튼 클릭")
-        word = self.input_box[0].get_content()
-        mean = self.input_box[1].get_content()
+        word = self.input_box.get_content()
+        mean = self.meanBox.get_content()
         # sentence = self.input_box[2].get_content()
         lv = self.lv
 
@@ -124,9 +126,8 @@ class AddController:
 
     def edit_word(self, original_word):
         print("수정 버튼 클릭")
-        word = self.input_box[0].get_content()
-        mean = self.input_box[1].get_content()
-        # sentence = self.input_box[2].get_content()
+        word = self.input_box.get_content()
+        mean = self.meanBox.get_content()
         lv = self.lv
 
         if edit_word(original_word, word, mean, lv):

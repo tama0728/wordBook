@@ -6,7 +6,7 @@ import os
 import random
 
 
-class ShortAnswerTestView:
+class TestView:
     def __init__(self, screen, font):
         self.screen = screen
         self.font = font

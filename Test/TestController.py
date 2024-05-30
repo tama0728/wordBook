@@ -1,18 +1,17 @@
 import pygame
 import random
-import time
 from Test.TestModel import TestModel
-from Test.Short.ShortAnswerTestView import ShortAnswerTestView
+from Test.TestView import TestView
 
 
-class ShortAnswerTestController:
+class TestController:
     def __init__(self, user_id):
         pygame.init()
         self.original_screen_size = (800, 600)
         self.screen = pygame.display.set_mode(self.original_screen_size)
         pygame.display.set_caption("단어 테스트")
         self.font = pygame.font.SysFont("D2Coding", 32)
-        self.view = ShortAnswerTestView(self.screen, self.font)
+        self.view = TestView(self.screen, self.font)
         self.model = TestModel()
         self.running = True
         self.state = 'selecting_mode'

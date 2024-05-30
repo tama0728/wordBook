@@ -1,7 +1,5 @@
 import pygame
-
 from Api.Button import Button
-
 
 class AddView:
     def __init__(self, text="추가"):
@@ -10,7 +8,6 @@ class AddView:
 
         self.word_box = pygame.Rect(200, 100, 300, 50)
         self.mean_box = pygame.Rect(200, 200, 300, 50)
-        self.sentence_box = pygame.Rect(200, 300, 300, 50)
         self.lv_box = pygame.Rect(200, 300, 300, 50)
 
         self.checkBox = pygame.Rect(255, 310, 30, 30)

@@ -144,3 +144,29 @@ class HangulInputBox(pygame.sprite.Sprite):
             i += j
 
         return join_jamos(result)
+
+    def set_content(self, text: str) -> None:
+        self.text = text
+        self.textImage = self.font.render(self.text, True, 'black')
+        self.textRect = self.textImage.get_rect()
+        if self.textRect.width > self.rect.width:
+            self.textRect.topright = (self.rect.width - self.fontSize, 0)
+        else:
+            self.textRect.topleft = (0, 0)
+        self.cursor.topleft = self.textRect.topright
+        self.hanText = ''
+        self.hanMode = False
+
+    def get_content(self) -> str:
+        return self.text + HangulInputBox.engkor(self.hanText)
+
+    def clear_content(self) -> None:
+        self.text = ''
+        self.hanText = ''
+        self.hanMode = False
+        self.textImage = self.font.render(self.text, True, 'black')
+        self.textRect = self.textImage.get_rect()
+        self.cursor.topleft = self.textRect.topright
+
+    def draw(self, screen) -> None:
+        screen.blit(self.image, self.rect)
