@@ -9,7 +9,6 @@ class LoginModel:
         self.cursor = self.conn.cursor()
 
     def login(self, username, password):
-        # password = sha256(password.encode('utf-8')).hexdigest()
         query = "SELECT id FROM users WHERE username = %s AND password = %s"
         self.cursor.execute(query, (username, password))
         res = self.cursor.fetchone()

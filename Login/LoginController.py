@@ -89,6 +89,12 @@ class Controller:
                     self.loginView.register_button.is_hover(event.pos)
 
     def login(self, username, password):
+        username = username.strip()
+        password = password.strip()
+        if len(username) < 3 or len(password) < 3:
+            print("아이디 또는 비밀번호는 3글자 이상이어야 합니다.")
+            self.popup.show("아이디 또는 비밀번호는 3글자 이상이어야 합니다.")
+            return
         id = self.loginModel.login(username, password)
         if id:
             print("로그인 성공")

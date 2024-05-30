@@ -75,6 +75,12 @@ class RegisterController:
         return self.registered
 
     def register(self, username, password, phone):
+        username = username.strip()
+        password = password.strip()
+        if len(username) < 3 or len(password) < 3:
+            print("ID와 비밀번호는 3글자 이상이어야 합니다.")
+            self.popup.show("ID와 비밀번호는 3글자 이상이어야 합니다.")
+            return
         if self.model.register(username, password, phone):
             print("회원가입 성공")
             self.registered = True

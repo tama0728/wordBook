@@ -72,6 +72,9 @@ class Input:
                     self.hanText += event.unicode
                 else:
                     self.content += event.unicode
+            # ----------
+            text2 = self.content + self.eng2kor(self.hanText)
+            self.content = text2
 
     def get_content(self):
         return self.content

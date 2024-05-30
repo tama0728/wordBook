@@ -4,6 +4,8 @@ from config import config
 
 
 def del_word(word):
+    if word == "":
+        return False
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
 
