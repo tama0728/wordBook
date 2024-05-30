@@ -1,7 +1,7 @@
 import pygame
 import random
 import time
-from Test.Short.ShortAnswerTestModel import ShortAnswerTestModel
+from Test.TestModel import TestModel
 from Test.Short.ShortAnswerTestView import ShortAnswerTestView
 
 
@@ -13,7 +13,7 @@ class ShortAnswerTestController:
         pygame.display.set_caption("단어 테스트")
         self.font = pygame.font.SysFont("D2Coding", 32)
         self.view = ShortAnswerTestView(self.screen, self.font)
-        self.model = ShortAnswerTestModel()
+        self.model = TestModel()
         self.running = True
         self.state = 'selecting_mode'
         self.selected_level = None
