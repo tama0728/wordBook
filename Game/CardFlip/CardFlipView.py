@@ -15,8 +15,8 @@ LIGHTRED = (255, 200, 200)
 class CardFlipView:
     def __init__(self, model):
         os.environ['SDL_VIDEO_CENTERED'] = '1'  # 화면을 중앙에 배치
-        self.SCREEN_WIDTH = 800
-        self.SCREEN_HEIGHT = 600
+        self.SCREEN_WIDTH = 900
+        self.SCREEN_HEIGHT = 700
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.model = model
         self.screen_width, self.screen_height = self.screen.get_size()  # 화면의 너비와 높이 가져오기
