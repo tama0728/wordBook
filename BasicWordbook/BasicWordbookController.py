@@ -87,7 +87,7 @@ class BasicWordbookController:
                 cursor = connection.cursor(dictionary=True)
                 filters = self.model.get_filters()
                 query = "SELECT * FROM words WHERE word LIKE %s"
-                params = [f"%{word}%"]
+                params = [f"{word}%"]
 
                 if filters["즐겨찾기"]:
                     query += " AND word IN (SELECT word FROM favorite WHERE id = %s)"

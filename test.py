@@ -1,3 +1,2 @@
-WHITE = (255, 255, 255)
-
-print(WHITE // 2)
+import Login.LoginController as Controller
+print(Controller.__file__)
