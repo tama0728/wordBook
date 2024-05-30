@@ -1,3 +1,4 @@
+import random
 import time
 
 import pygame
@@ -77,7 +78,7 @@ class ShortAnswerTestView:
             self.screen.blit(start_text, start_rect)
         self.screen.blit(self.home_icon, self.home_button)
 
-    def render_word(self, game_mode, word, is_subjective, current_index, total_words):
+    def render_short_test(self, game_mode, word, current_index, total_words):
         self.screen.fill('white')
 
         # 하늘색 큰 사각형
@@ -102,6 +103,27 @@ class ShortAnswerTestView:
         self.screen.blit(self.box.image, self.box.rect)
 
         self.screen.blit(self.home_icon, self.home_button)
+
+    def render_choice_test(self, game_mode, words, current_index, total_words):
+        self.screen.fill('white')
+        self.screen.blit(self.home_icon, self.home_button)
+        word = [words[current_index], random.sample(words[:current_index, current_index + 1:], 3)]
+        choices = self.create_buttons(word, 2, 2, 300)
+        for rect, word in choices:
+            pygame.draw.rect(self.screen, (0, 128, 255), rect, border_radius=10)
+            pygame.draw.rect(self.screen, (255, 255, 255), rect.inflate(-6, -6), border_radius=10)
+            display_text = word[1] if '한 -> 영' in game_mode else word[0]
+            word_text = self.font.render(display_text, True, 'black')
+            word_text_rect = word_text.get_rect(center=rect.center)
+            self.screen.blit(word_text, word_text_rect)
+        pygame.draw.rect(self.screen, (173, 216, 230), self.start_button, border_radius=10)
+        start_text = self.font.render("Start", True, 'black')
+        start_rect = start_text.get_rect(center=self.start_button.center)
+        self.screen.blit(start_text, start_rect)
+        progress_text = self.font.render(f"{current_index + 1}/{total_words}", True, 'black')
+
+        progress_text_rect = progress_text.get_rect(bottomright=(780, 580))
+        self.screen.blit(progress_text, progress_text_rect)
 
     def render_score(self, score, total):
         self.screen.fill('white')

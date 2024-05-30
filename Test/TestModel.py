@@ -3,7 +3,7 @@ from config import config
 import random
 
 
-class ShortAnswerTestCard:
+class TestCard:
     def __init__(self, word, mean, level, is_favorite=False):
         self.word = word
         self.mean = mean
@@ -11,7 +11,7 @@ class ShortAnswerTestCard:
         self.is_favorite = is_favorite
 
 
-class ShortAnswerTestModel:
+class TestModel:
     def __init__(self):
         self.conn = mysql.connector.connect(**config)
         self.cursor = self.conn.cursor()

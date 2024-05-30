@@ -1,7 +1,5 @@
 import pygame
-import random
-import time
-from Test.Short.ShortAnswerTestModel import ShortAnswerTestModel
+from Test.TestModel import TestModel
 from Test.Short.ShortAnswerTestView import ShortAnswerTestView
 
 
@@ -13,7 +11,7 @@ class ShortAnswerTestController:
         pygame.display.set_caption("단어 테스트")
         self.font = pygame.font.SysFont("D2Coding", 32)
         self.view = ShortAnswerTestView(self.screen, self.font)
-        self.model = ShortAnswerTestModel()
+        self.model = TestModel()
         self.running = True
         self.state = 'selecting_mode'
         self.selected_level = None
@@ -44,7 +42,10 @@ class ShortAnswerTestController:
             elif self.state == 'selecting_levels':
                 self.view.render_level_selection(self.selected_level)
             else:
-                self.render_test()
+                if self.check_mode() == '주관식':
+                    self.render_short_test()
+                else:
+                    self.render_choice_test()
 
             pygame.display.update()
             self.clock.tick(30)
@@ -108,6 +109,12 @@ class ShortAnswerTestController:
         )
         pygame.display.set_mode((800, 600))
 
+    def check_mode(self):
+        if '주관식' in self.game_mode:
+            return '주관식'
+        else:
+            return '객관식'
+
     def check_answer(self, user_input):
         if '한 -> 영' in self.game_mode:
             correct_answer = self.words[self.current_word_index][0]
@@ -131,12 +138,11 @@ class ShortAnswerTestController:
         if self.current_word_index >= len(self.words):
             self.running = False
 
-    def render_test(self):
+    def render_short_test(self):
         if self.current_word_index < len(self.words):
-            self.view.render_word(
+            self.view.render_short_test(
                 self.game_mode,
                 self.words[self.current_word_index],
-                '주관식' in self.game_mode,
                 self.current_word_index,
                 len(self.words)
             )
@@ -146,3 +152,16 @@ class ShortAnswerTestController:
             pygame.time.wait(2000)
             self.running = False
 
+    def render_choice_test(self):
+        if self.current_word_index < len(self.words):
+            self.view.render_choice_test(
+                self.game_mode,
+                self.words,
+                self.current_word_index,
+                len(self.words)
+            )
+        else:
+            self.view.render_score(self.score, len(self.words))
+            pygame.display.update()
+            pygame.time.wait(2000)
+            self.running = False
