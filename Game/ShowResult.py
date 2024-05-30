@@ -1,4 +1,5 @@
 import pygame
+
 from Game.CheckWriteRanking import CheckWriteRanking
 
 WHITE = (255, 255, 255)

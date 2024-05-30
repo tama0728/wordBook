@@ -1,10 +1,10 @@
 import pygame
+from gtts import gTTS
 from pygame.locals import *
+
+from Api.Popup import Popup
 from WordCard.WordCardModel import WordCardModel
 from WordCard.WordCardView import WordCardView
-from gtts import gTTS
-from Api.Popup import Popup
-from User.UserController import UserController
 
 
 class WordCardController:

@@ -1,8 +1,10 @@
-import mysql.connector
 import random
+
+import mysql.connector
 
 # config.py에서 데이터베이스 구성 정보 가져오기
 from config import config
+
 
 # 데이터베이스에 연결하고 데이터 가져오기
 def fetch_words():

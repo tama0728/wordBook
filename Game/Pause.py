@@ -1,5 +1,5 @@
 import pygame
-import os
+
 from Game.GameRectangle import Rectangle
 
 WHITE = (255, 255, 255)

@@ -1,10 +1,10 @@
 import pygame
-import sys
-from Game.Pause import Pause
+
 from Game.CardFlip.CardFlipModel import CardFlipModel
 from Game.CardFlip.CardFlipView import CardFlipView
-from Game.StartScreen import StartScreen
+from Game.Pause import Pause
 from Game.ShowResult import ShowResult
+from Game.StartScreen import StartScreen
 
 
 # 게임 컨트롤러 (입력 처리 및 게임 로직 연결)

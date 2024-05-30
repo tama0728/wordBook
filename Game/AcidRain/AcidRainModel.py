@@ -1,7 +1,8 @@
 import random
-from Game.make_word_array import generate_word_pairs
-from Game.make_word_array import create_translation_dict
+
 from Game.AcidRain.AcidRainView import AcidRainView
+from Game.make_word_array import create_translation_dict
+from Game.make_word_array import generate_word_pairs
 
 
 class AcidRainModel:

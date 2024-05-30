@@ -1,6 +1,8 @@
-import mysql.connector
-from config import config
 import random
+
+import mysql.connector
+
+from config import config
 
 
 class TestCard:

@@ -1,10 +1,10 @@
 import pygame
 
-from Game.GameView import GameView
-from View import View
 from Api.Popup import Popup
 from Game.AcidRain.AcidRainController import AcidRainController
 from Game.CardFlip.CardFlipController import CardFlipController
+from Game.GameView import GameView
+from View import View
 
 
 class GameController:

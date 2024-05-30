@@ -1,6 +1,9 @@
-import pygame
-from Api.Input import Input  # Assuming Input class is in the same directory
 import os
+
+import pygame
+
+from Api.Input import Input  # Assuming Input class is in the same directory
+
 
 class WordCardView:
     def __init__(self, screen):

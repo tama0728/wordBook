@@ -4,13 +4,13 @@ import pygame
 from pygame.locals import *
 
 from Admin.AdminController import AdminController
+from Api.Input import Input
+from Api.Popup import Popup
 from Login.LoginModel import LoginModel
 from Login.LoginView import LoginView
 from Register.RegisterController import RegisterController
 from User.UserController import UserController
 from View import View
-from Api.Input import Input
-from Api.Popup import Popup
 
 
 class Controller:

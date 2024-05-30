@@ -1,5 +1,7 @@
-import pygame
 import random
+
+import pygame
+
 from Test.TestModel import TestModel
 from Test.TestView import TestView
 

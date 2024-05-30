@@ -1,5 +1,7 @@
-import pygame
 import os
+
+import pygame
+
 from Game.GameRectangle import Rectangle
 from Game.Pause import Pause
 

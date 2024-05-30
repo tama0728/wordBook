@@ -2,11 +2,11 @@ import pygame
 
 from Add.AddModel import add_word
 from Add.AddView import AddView
-from Edit.EditModel import edit_word
-from View import View
 from Api.CheckBox import CheckBox
 from Api.Input import Input
 from Api.Popup import Popup
+from Edit.EditModel import edit_word
+from View import View
 
 
 class AddController:

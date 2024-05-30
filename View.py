@@ -1,5 +1,7 @@
-import pygame
 import os
+
+import pygame
+
 
 class View:
     def __init__(self):

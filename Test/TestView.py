@@ -1,9 +1,9 @@
+import os
 import time
 
 import pygame
+
 from Api.hangulInputBox import HangulInputBox
-import os
-import random
 
 
 class TestView:

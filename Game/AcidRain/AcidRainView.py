@@ -1,7 +1,9 @@
-import pygame
 import os
-from Game.Pause import Pause
+
+import pygame
+
 from Game.GameRectangle import Rectangle
+from Game.Pause import Pause
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)

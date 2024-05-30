@@ -1,11 +1,13 @@
-import pygame
-import sys
 import random
-from Game.StartScreen import StartScreen
-from Game.Pause import Pause
-from Game.ShowResult import ShowResult
+import sys
+
+import pygame
+
 from Game.AcidRain.AcidRainModel import AcidRainModel
 from Game.AcidRain.AcidRainView import AcidRainView
+from Game.Pause import Pause
+from Game.ShowResult import ShowResult
+from Game.StartScreen import StartScreen
 
 
 class AcidRainController:

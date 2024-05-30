@@ -1,4 +1,5 @@
 import pygame
+
 from Game.CheckWriteRanking import CheckWriteRanking
 
 

@@ -1,6 +1,8 @@
-import pygame
-import sys
 import os
+import sys
+
+import pygame
+
 from Game.GameRectangle import Rectangle
 from Game.ShowRanking import ShowRanking
 
