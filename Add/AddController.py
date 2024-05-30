@@ -7,8 +7,6 @@ from View import View
 from Api.CheckBox import CheckBox
 from Api.Input import Input
 from Api.Popup import Popup
-from Api.hangulInputBox import HangulInputBox as hangulInputBox
-
 
 
 class AddController:
