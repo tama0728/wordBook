@@ -19,7 +19,8 @@ class AddController:
         self.res = res
 
         self.input_box = Input("단어  ", self.view, self.addView.word_box)
-        self.meanBox = hangulInputBox("d2coding", 32, 14, 'black', 'gray')
+        # self.meanBox = hangulInputBox("d2coding", 32, 14, 'black', 'gray')
+        self.meanBox = Input("뜻  ", self.view, self.addView.mean_box, kor=True)
         self.meanBox.rect.center = self.addView.mean_box.center
 
         self.checkBoxs = [CheckBox("Lv.1 ", self.view, self.addView.checkBox),
@@ -53,10 +54,13 @@ class AddController:
             for i in range(len(self.checkBoxs)):
                 self.checkBoxs[i].draw()
 
-            if 0 == active:
+            if active == 0:
                 self.input_box.set_active()
-            # else:
-            #     self.meanBox.update(None)
+                self.meanBox.set_inactive()
+            elif active == 1:
+                self.input_box.set_inactive()
+                self.meanBox.set_active()
+
             self.input_box.draw(self.view.screen)
             self.meanBox.draw(self.view.screen)
 
@@ -100,7 +104,7 @@ class AddController:
                     if active == 0:
                         self.input_box.handle_input(event)
                     elif active == 1:
-                        self.meanBox.update(event)
+                        self.meanBox.handle_input(event)
                     if event.key == pygame.K_TAB:
                         active = (active + 1) % 2
                     if event.key == pygame.K_RETURN:
