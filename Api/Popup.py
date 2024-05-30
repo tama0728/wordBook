@@ -4,7 +4,7 @@ from pygame.rect import Rect
 
 
 class Popup:
-    def __init__(self):
+    def __init__(self) -> None:
         self.popup_font = pygame.font.SysFont("d2coding", 32)
         self.popup_rect = Rect(200, 200, 240, 80)  # 팝업 메시지 박스 크기
         self.popup_color = pygame.Color('lightgray')  # 팝업 메시지 박스 색상
@@ -13,7 +13,9 @@ class Popup:
         self.popup_text = ""
         self.popup_timer = 0
 
-    def show(self, message, timer=45):
+    def show(self, message, timer=45, rect=None):
+        if rect:
+            self.popup_rect = rect
         self.popup_text = message
         self.popup_visible = True
         self.popup_timer = timer

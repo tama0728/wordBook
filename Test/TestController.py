@@ -144,6 +144,10 @@ class TestController:
 
     def render_test(self):
         if '객관식' in self.game_mode and self.shuffle:
+            if self.words is None or len(self.words) == 0:
+                self.running = False
+                return
+
             self.choice = self.model.fetch_wordcards(limit=3, exclude=self.words[self.current_word_index][0])
             # shuffle the choices
             self.choice.append(self.words[self.current_word_index])
