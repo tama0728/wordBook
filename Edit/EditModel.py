@@ -4,6 +4,8 @@ from config import config
 
 
 def edit_word(word, new_word, new_mean, new_lv):
+    if word == "" or new_word == "" or new_mean == "":
+        return False
     conn = mysql.connector.connect(**config)
     cursor = conn.cursor()
 
