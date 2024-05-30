@@ -29,9 +29,6 @@ class ShortAnswerTestController:
 
     def run(self):
         while self.running:
-            key_event = None
-            start_button_clicked = False
-
             for event in pygame.event.get():
                 self.handle_event(event)
 
@@ -70,6 +67,7 @@ class ShortAnswerTestController:
     def handle_mousedown(self, event):
         if self.view.home_button.collidepoint(event.pos):
             self.reset_to_mode_selection()
+            self.running = False
         elif self.state == 'selecting_mode':
             self.handle_mode_selection(event)
         elif self.state == 'selecting_levels':
@@ -100,7 +98,6 @@ class ShortAnswerTestController:
         self.current_word_index = 0
         self.score = 0
         self.words = []
-        pygame.display.set_mode(self.original_screen_size)
 
     def start_test(self):
         self.state = 'testing'

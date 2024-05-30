@@ -8,7 +8,7 @@ class AcidRainModel:
     def __init__(self):
         self.view = AcidRainView()
         self.falling_words = []
-        self.dict_list = create_translation_dict((generate_word_pairs(20)))
+        self.dict_list = create_translation_dict((generate_word_pairs(100)))
         self.word_list = list(self.dict_list.values())
         self.lives = 3
         self.score = 0
