@@ -3,6 +3,7 @@ import time
 import pygame
 from Api.hangulInputBox import HangulInputBox
 import os
+import random
 
 
 class ShortAnswerTestView:
@@ -17,6 +18,7 @@ class ShortAnswerTestView:
         self.level_buttons = self.create_buttons(self.levels, 1, 5, 20)
         self.start_button = pygame.Rect(350, 500, 100, 50)
         self.home_button = pygame.Rect(700, 500, 80, 80)
+        self.choice_buttons = []
 
         current_dir = os.path.dirname(os.path.abspath(__file__))
         checkbox_checked_path = os.path.join(current_dir, "../../Images/checkbox_unchecked.png")
@@ -29,7 +31,7 @@ class ShortAnswerTestView:
         self.home_icon = pygame.image.load(home_icon_path).convert_alpha()
         self.home_icon = pygame.transform.scale(self.home_icon, (80, 80))
 
-    def create_buttons(self, items, cols, rows, width=None):
+    def create_buttons(self, items, cols, rows, width=None, height=0):
         buttons = []
         screen_width, screen_height = self.screen.get_size()
         if width:
@@ -45,7 +47,7 @@ class ShortAnswerTestView:
             row = i % rows
             col = i // rows
             x = x_margin + col * (button_width + x_margin)
-            y = y_margin + row * (button_height + y_margin)
+            y = y_margin + row * (button_height + y_margin) + height
             rect = pygame.Rect(x, y, button_width, button_height)
             buttons.append((rect, item))
         return buttons
@@ -77,30 +79,61 @@ class ShortAnswerTestView:
             self.screen.blit(start_text, start_rect)
         self.screen.blit(self.home_icon, self.home_button)
 
-    def render_word(self, game_mode, word, is_subjective, current_index, total_words):
-        self.screen.fill('white')
+    def render_choices(self):
+        for rect, ans in self.choice_buttons:
+            pygame.draw.rect(self.screen, (0, 128, 255), rect, border_radius=10)  # 진한 파란색 배경과 둥근 모서리
+            pygame.draw.rect(self.screen, (255, 255, 255), rect.inflate(-6, -6), border_radius=10)  # 흰색 안쪽 배경
+            lines = ans.split('\n')
+            for idx, line in enumerate(lines):
+                mode_text = self.font.render(line, True, 'black')
+                mode_text_rect = mode_text.get_rect(center=(rect.centerx, rect.centery - 10 + idx * 20))  # 텍스트 두 줄 배치
+                self.screen.blit(mode_text, mode_text_rect)
+        self.screen.blit(self.home_icon, self.home_button)
 
-        # 하늘색 큰 사각형
-        rect = pygame.Rect(150, 100, 500, 250)
-        pygame.draw.rect(self.screen, (173, 216, 230), rect, border_radius=10)
+    def render_word(self, game_mode, word, choices, current_index, total_words):
+        self.screen.fill('white')
+        mode = 1 if '한 -> 영' in game_mode else 0
 
         # 단어 표시
-        display_text = word[1] if '한 -> 영' in game_mode else word[0]
-        word_text = self.font.render(display_text, True, 'black')
-        word_text_rect = word_text.get_rect(center=(rect.centerx, rect.centery))
-        self.screen.blit(word_text, word_text_rect)
+        display_text = word[1] if mode else word[0]
 
-        # 문제 번호 표시
-        progress_text = self.font.render(f"{current_index + 1}/{total_words}", True, 'black')
-        progress_text_rect = progress_text.get_rect(bottomright=(rect.right - 10, rect.bottom - 10))
-        self.screen.blit(progress_text, progress_text_rect)
+        if "주관식" in game_mode:
+            # 하늘색 큰 사각형
+            rect = pygame.Rect(150, 100, 500, 250)
+            pygame.draw.rect(self.screen, (173, 216, 230), rect, border_radius=10)
+            word_text = self.font.render(display_text, True, 'black')
+            word_text_rect = word_text.get_rect(center=(rect.centerx, rect.centery))
+            self.screen.blit(word_text, word_text_rect)
 
-        # 텍스트 입력창
-        self.box.rect.midtop = (330, 400)  # slightly move the text input box to the left
-        self.box.rect.width = 300  # 텍스트 입력창 너비 조정
-        self.box.update(None)  # 화면에 그리기 위해 update 호출
-        self.screen.blit(self.box.image, self.box.rect)
+            # 문제 번호 표시
+            progress_text = self.font.render(f"{current_index + 1}/{total_words}", True, 'black')
+            progress_text_rect = progress_text.get_rect(bottomright=(rect.right - 10, rect.bottom - 10))
+            self.screen.blit(progress_text, progress_text_rect)
 
+            # 텍스트 입력창
+            self.box.rect.midtop = (330, 400)  # slightly move the text input box to the left
+            self.box.rect.width = 300  # 텍스트 입력창 너비 조정
+            self.box.update(None)  # 화면에 그리기 위해 update 호출
+            self.screen.blit(self.box.image, self.box.rect)
+
+        else:
+            buttons = []
+            # display the word
+            word_text = self.font.render(display_text, True, 'black')
+            word_text_rect = word_text.get_rect(center=(400, 100))
+            self.screen.blit(word_text, word_text_rect)
+
+            # 선택지 버튼
+            for i, sel in enumerate(choices):
+                text = sel[0] if mode else sel[1]
+                buttons.append(text)
+                # 문제 번호 표시
+                progress_text = self.font.render(f"{current_index + 1}/{total_words}", True, 'black')
+                progress_text_rect = progress_text.get_rect(center=(400, 500))
+                self.screen.blit(progress_text, progress_text_rect)
+
+            self.choice_buttons = self.create_buttons(buttons, 2, 2, height=50)
+            self.render_choices()
         self.screen.blit(self.home_icon, self.home_button)
 
     def render_score(self, score, total):

@@ -26,6 +26,8 @@ class ShortAnswerTestController:
         self.enter_event_handled = False
         self.background_color = 'white'
         self.answer_display_time = 0
+        self.choice = None
+        self.shuffle = True
 
     def run(self):
         while self.running:
@@ -72,6 +74,8 @@ class ShortAnswerTestController:
             self.handle_mode_selection(event)
         elif self.state == 'selecting_levels':
             self.handle_level_selection(event)
+        elif self.state == 'testing' and '객관식' in self.game_mode:
+            self.handle_choice(event)
 
     def handle_mode_selection(self, event):
         for rect, mode in self.view.mode_buttons:
@@ -86,6 +90,14 @@ class ShortAnswerTestController:
                 break
         if self.view.start_button.collidepoint(event.pos) and self.selected_level:
             self.start_test()
+
+    def handle_choice(self, event):
+        for rect, choice in self.view.choice_buttons:
+            if rect.collidepoint(event.pos):
+                self.view.box.text = choice
+                self.enter_event_handled = False
+                self.check_answer(choice)
+                self.shuffle = True
 
     def handle_userevent(self, event):
         if event.name == 'enterEvent' and self.state == 'testing' and not self.enter_event_handled:
@@ -132,17 +144,30 @@ class ShortAnswerTestController:
             self.running = False
 
     def render_test(self):
+        if '객관식' in self.game_mode and self.shuffle:
+            self.choice = self.model.fetch_wordcards(limit=3, exclude=self.words[self.current_word_index][0])
+            # shuffle the choices
+            self.choice.append(self.words[self.current_word_index])
+            random.shuffle(self.choice)
+            self.shuffle = False
+
         if self.current_word_index < len(self.words):
             self.view.render_word(
                 self.game_mode,
                 self.words[self.current_word_index],
-                '주관식' in self.game_mode,
+                self.choice,
                 self.current_word_index,
                 len(self.words)
             )
+            if '객관식' in self.game_mode:
+                for event in pygame.event.get():
+                    self.handle_event(event)
+
         else:
             self.view.render_score(self.score, len(self.words))
+            self.current_word_index = 0
             pygame.display.update()
             pygame.time.wait(2000)
             self.running = False
+            self.shuffle = False
 

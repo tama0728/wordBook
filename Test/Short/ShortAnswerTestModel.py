@@ -16,9 +16,14 @@ class ShortAnswerTestModel:
         self.conn = mysql.connector.connect(**config)
         self.cursor = self.conn.cursor()
 
-    def fetch_wordcards(self, limit=20, filter_levels=None, user_id=None):
+    def fetch_wordcards(self, limit=20, filter_levels=None, user_id=None, exclude=None):
         wordcards = []
-        if "Level" in filter_levels:
+        if not filter_levels:
+            query = f"SELECT word, mean, lv FROM words where word != '%s' ORDER BY RAND() LIMIT {limit}" % exclude
+            self.cursor.execute(query)
+            wordcards = self.cursor.fetchall()
+
+        elif "Level" in filter_levels:
             filter_query = f"where lv = {filter_levels[-1]}"
             query = f"SELECT word, mean, lv FROM words {filter_query} ORDER BY RAND() LIMIT {limit}"
             self.cursor.execute(query)
@@ -34,7 +39,7 @@ class ShortAnswerTestModel:
                 query = f"SELECT word, mean, lv FROM words WHERE word = '{word[0]}'"
                 self.cursor.execute(query)
                 wordcards.append(self.cursor.fetchone())
-        else:
+        elif "Wrong" in filter_levels:
             filter_query = "SELECT word FROM wrong WHERE id = %d" % user_id
             self.cursor.execute(filter_query)
             wrong_words = self.cursor.fetchall()
