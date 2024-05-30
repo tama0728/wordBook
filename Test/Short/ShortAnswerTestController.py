@@ -119,6 +119,8 @@ class ShortAnswerTestController:
 
         if user_input == correct_answer:
             self.score += 1
+            self.view.show_answer('정답입니다!')
+            self.model.delet_wrong_answer(self.user_id, self.words[self.current_word_index][0])
         else:
             self.model.save_wrong_answer(self.user_id, self.words[self.current_word_index][0])
             self.view.show_answer(correct_answer)

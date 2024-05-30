@@ -48,7 +48,22 @@ class ShortAnswerTestModel:
         return wordcards
 
     def save_wrong_answer(self, user_id, word):
+        # check if the word is already in the wrong table
+        query = f"SELECT * FROM wrong WHERE id = {user_id} AND word = '{word}'"
+        self.cursor.execute(query)
+        if self.cursor.fetchone():
+            return
         query = "INSERT INTO wrong (id, word) VALUES (%d, '%s')" % (user_id, word)
+        self.cursor.execute(query)
+        self.conn.commit()
+
+    def delet_wrong_answer(self, user_id, word):
+        # check if the word is not in the wrong table
+        query = f"SELECT * FROM wrong WHERE id = {user_id} AND word = '{word}'"
+        self.cursor.execute(query)
+        if not self.cursor.fetchone():
+            return
+        query = "DELETE FROM wrong WHERE id = %d AND word = '%s'" % (user_id, word)
         self.cursor.execute(query)
         self.conn.commit()
 
