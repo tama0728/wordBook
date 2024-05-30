@@ -21,9 +21,9 @@ class TestView:
         self.choice_buttons = []
 
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        checkbox_checked_path = os.path.join(current_dir, "../../Images/checkbox_unchecked.png")
-        checkbox_unchecked_path = os.path.join(current_dir, "../../Images/checkbox_checked.png")
-        home_icon_path = os.path.join(current_dir, "../../Images/home.png")
+        checkbox_checked_path = os.path.join(current_dir, "../Images/checkbox_unchecked.png")
+        checkbox_unchecked_path = os.path.join(current_dir, "../Images/checkbox_checked.png")
+        home_icon_path = os.path.join(current_dir, "../Images/home.png")
         self.checkbox_checked = pygame.image.load(checkbox_checked_path).convert_alpha()
         self.checkbox_checked = pygame.transform.scale(self.checkbox_checked, (30, 30))
         self.checkbox_unchecked = pygame.image.load(checkbox_unchecked_path).convert_alpha()
