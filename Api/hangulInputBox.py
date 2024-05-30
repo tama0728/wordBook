@@ -61,15 +61,15 @@ class HangulInputBox(pygame.sprite.Sprite):
                     self.hanText = self.hanText[:-1]
                 elif len(self.text) > 0:
                     self.text = self.text[:-1]
-            elif event.key == pygame.K_ESCAPE:  # 한영 변환 인식 Left Shift + space
-                if self.hanMode:  # 영문모드로 토글
-                    self.text += HangulInputBox.engkor(self.hanText)
-                    self.cursor = pygame.Rect(self.textRect.topright, (3, self.fontSize))
-                    self.hanMode = False
-                else:  # 한글모드로 토클
-                    self.cursor = pygame.Rect(self.textRect.topright, (16, self.fontSize))
-                    self.hanMode = True
-                self.hanText = ''
+            # elif event.key == pygame.K_ESCAPE:  # 한영 변환 인식 Left Shift + space
+            #     if self.hanMode:  # 영문모드로 토글
+            #         self.text += HangulInputBox.engkor(self.hanText)
+            #         self.cursor = pygame.Rect(self.textRect.topright, (3, self.fontSize))
+            #         self.hanMode = False
+            #     else:  # 한글모드로 토클
+            #         self.cursor = pygame.Rect(self.textRect.topright, (16, self.fontSize))
+            #         self.hanMode = True
+            #     self.hanText = ''
             else:
                 if self.hanMode:
                     self.hanText += event.unicode

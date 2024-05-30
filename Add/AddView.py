@@ -1,6 +1,7 @@
 import pygame
 from Api.Button import Button
 
+
 class AddView:
     def __init__(self, text="추가"):
         self.add_button = Button(pygame.Rect(200, 370, 130, 50), text)
