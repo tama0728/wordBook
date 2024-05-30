@@ -17,7 +17,7 @@ class CardFlipModel:
         self.first_card = None    # 첫 번째로 선택한 카드 인덱스
         self.second_card = None   # 두 번째로 선택한 카드 인덱스
         self.match_count = 0      # 맞춘 카드 쌍의 수
-        self.word_pairs = Game.make_word_array.generate_word_pairs(2)  # 단어 쌍 생성
+        self.word_pairs = Game.make_word_array.generate_word_pairs(12)  # 단어 쌍 생성
         self.create_cards()       # 카드 생성 및 섞기
         self.disable_card_selection = False  # 카드 선택 비활성화 상태
         self.paused = False  # 일시정지 상태

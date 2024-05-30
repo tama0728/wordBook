@@ -1,42 +1,44 @@
+import time
+
 import pygame
-# from Api.hangulInputBox import HangulInputBox
-from Api.Input import Input
+from Api.hangulInputBox import HangulInputBox
 import os
-from View import View
+
 
 class ShortAnswerTestView:
     def __init__(self, screen, font):
         self.screen = screen
         self.font = font
-        # self.box = HangulInputBox('D2Coding', 32, 14, 'black', 'gray')
-        self.box = Input("", self, pygame.Rect(0, 0, 0, 0))
+        self.box = HangulInputBox('D2Coding', 32, 14, 'black', 'gray')
         self.box.rect.center = (100, 200)  # 텍스트 입력창 위치 조정
         self.modes = ['영 -> 한\n객관식', '한 -> 영\n객관식', '영 -> 한\n주관식', '한 -> 영\n주관식']
         self.levels = ['Level 1', 'Level 2', 'Level 3', 'Favorites', 'Wrong']
         self.mode_buttons = self.create_buttons(self.modes, 2, 2)
-        self.level_buttons = self.create_buttons(self.levels, 1, 5)
+        self.level_buttons = self.create_buttons(self.levels, 1, 5, 20)
         self.start_button = pygame.Rect(350, 500, 100, 50)
         self.home_button = pygame.Rect(700, 500, 80, 80)
 
-        # 이미지 로드
         current_dir = os.path.dirname(os.path.abspath(__file__))
         checkbox_checked_path = os.path.join(current_dir, "../../Images/checkbox_unchecked.png")
         checkbox_unchecked_path = os.path.join(current_dir, "../../Images/checkbox_checked.png")
-        home_path = os.path.join(current_dir, "../../Images/home.png")
-
+        home_icon_path = os.path.join(current_dir, "../../Images/home.png")
         self.checkbox_checked = pygame.image.load(checkbox_checked_path).convert_alpha()
         self.checkbox_checked = pygame.transform.scale(self.checkbox_checked, (30, 30))
         self.checkbox_unchecked = pygame.image.load(checkbox_unchecked_path).convert_alpha()
         self.checkbox_unchecked = pygame.transform.scale(self.checkbox_unchecked, (30, 30))
-        self.home_icon = pygame.image.load(home_path).convert_alpha()
+        self.home_icon = pygame.image.load(home_icon_path).convert_alpha()
         self.home_icon = pygame.transform.scale(self.home_icon, (80, 80))
 
-    def create_buttons(self, items, cols, rows):
+    def create_buttons(self, items, cols, rows, width=None):
         buttons = []
         screen_width, screen_height = self.screen.get_size()
-        button_width = screen_width // (cols + 1)
+        if width:
+            button_width = width
+            x_margin = width * 3
+        else:
+            button_width = screen_width // (cols + 1)
+            x_margin = (screen_width - (cols * button_width)) // (cols + 1)
         button_height = screen_height // (rows + 3)
-        x_margin = (screen_width - (cols * button_width)) // (cols + 1)
         y_margin = (screen_height - (rows * button_height)) // (rows + 2)
 
         for i, item in enumerate(items):
@@ -83,7 +85,7 @@ class ShortAnswerTestView:
         pygame.draw.rect(self.screen, (173, 216, 230), rect, border_radius=10)
 
         # 단어 표시
-        display_text = word.mean if '한 -> 영' in game_mode else word.word
+        display_text = word[1] if '한 -> 영' in game_mode else word[0]
         word_text = self.font.render(display_text, True, 'black')
         word_text_rect = word_text.get_rect(center=(rect.centerx, rect.centery))
         self.screen.blit(word_text, word_text_rect)
@@ -96,8 +98,7 @@ class ShortAnswerTestView:
         # 텍스트 입력창
         self.box.rect.midtop = (330, 400)  # slightly move the text input box to the left
         self.box.rect.width = 300  # 텍스트 입력창 너비 조정
-        # self.box.update(None)  # 화면에 그리기 위해 update 호출
-        self.box.draw(self.screen)
+        self.box.update(None)  # 화면에 그리기 위해 update 호출
         self.screen.blit(self.box.image, self.box.rect)
 
         self.screen.blit(self.home_icon, self.home_button)
@@ -110,3 +111,11 @@ class ShortAnswerTestView:
 
     def update_input_box(self, event):
         self.box.update(event)
+
+    def show_answer(self, answer):
+        self.screen.fill('white')
+        answer_text = self.font.render(answer, True, 'black')
+        answer_text_rect = answer_text.get_rect(center=(400, 300))
+        self.screen.blit(answer_text, answer_text_rect)
+        pygame.display.flip()
+        time.sleep(1)

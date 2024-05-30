@@ -28,8 +28,8 @@ class AcidRainController:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
-                    if self.model.check_input(self.input_text):
-                        self.input_text = ''  # 입력한 단어와 같은 단어를 찾으면 입력 텍스트 초기화
+                    self.model.check_input(self.input_text)
+                    self.input_text = ''  # 입력한 단어와 같은 단어를 찾으면 입력 텍스트 초기화
                 elif event.key == pygame.K_BACKSPACE:
                     self.input_text = self.input_text[:-1]
                 elif event.key == pygame.K_ESCAPE:
@@ -69,8 +69,7 @@ class AcidRainController:
             if not self.paused:  # 게임이 일시 정지 상태가 아닐 때만 게임 루프를 실행
                 if pygame.time.get_ticks() > self.next_word_time:
                     self.model.generate_word()
-                    self.next_word_time = pygame.time.get_ticks() + random.randint(1000,
-                                                                                   3000)  # 다음 단어 생성까지의 시간을 랜덤으로 설정
+                    self.next_word_time = pygame.time.get_ticks() + random.randint(1000,3000)  # 다음 단어 생성까지의 시간을 랜덤으로 설정
 
                 self.model.update_word_positions()
 
