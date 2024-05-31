@@ -44,7 +44,7 @@ class WordCardModel:
     def search_wordcards(self, word, id=None, filter_levels=None, only_favorites=False, only_wrong=False):
         search_query = "word LIKE %s"
         filter_query = [search_query]
-        params = [f"%{word}%"]
+        params = [f"{word}%"]
 
         if filter_levels:
             filter_query.append("lv IN ({})".format(",".join(map(str, filter_levels))))
