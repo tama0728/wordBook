@@ -2,6 +2,7 @@ import pygame
 from gtts import gTTS
 from pygame.locals import *
 import tempfile
+import os
 
 from Api.Popup import Popup
 from WordCard.WordCardModel import WordCardModel
