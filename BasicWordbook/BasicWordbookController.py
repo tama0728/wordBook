@@ -5,6 +5,7 @@ from BasicWordbook.BasicWordbookModel import BasicWordbookModel
 from BasicWordbook.BasicWordbookView import BasicWordbookView
 from config import config
 
+
 class BasicWordbookController:
     def __init__(self, user_id):
         self.user_id = user_id
@@ -24,14 +25,14 @@ class BasicWordbookController:
         else:
             word_data = self.model.get_word_data(page, filters)
             total_pages = self.model.get_total_pages(filters)
-        
+
         if total_pages == 0:
             total_pages = 1
             word_data = []
 
         if page > total_pages:
             page = total_pages
-        
+
         self.view.display_page(page, word_data, total_pages, self.model.favorite_status, self.model.checkboxes)
         self.model.current_page = page
 
@@ -61,7 +62,7 @@ class BasicWordbookController:
                 total_pages = (len(self.search_result) + self.model.words_per_page - 1) // self.model.words_per_page
             else:
                 total_pages = self.model.get_total_pages(self.model.get_filters())
-            
+
             if self.model.current_page < total_pages:
                 self.model.current_page += 1
                 self.display_page(self.model.current_page)
@@ -71,7 +72,8 @@ class BasicWordbookController:
             self.search_word()
             return
 
-        word_data = self.search_result if self.search_active else self.model.get_word_data(self.model.current_page, self.model.get_filters())
+        word_data = self.search_result if self.search_active else self.model.get_word_data(self.model.current_page,
+                                                                                           self.model.get_filters())
         for i in range(self.model.words_per_page):
             text_y = 200 + i * 60
             star_rect = pygame.Rect(60, text_y, 20, 20)
@@ -105,7 +107,7 @@ class BasicWordbookController:
                 cursor = connection.cursor(dictionary=True)
                 filters = self.model.get_filters()
                 query = "SELECT * FROM words WHERE word LIKE %s"
-                params = [f"%{word}%"]
+                params = [f"{word}%"]
 
                 if filters["즐겨찾기"]:
                     query += " AND word IN (SELECT word FROM favorite WHERE id = %s)"

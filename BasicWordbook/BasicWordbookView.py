@@ -10,7 +10,7 @@ class BasicWordbookView:
     def __init__(self):
         os.environ['SDL_VIDEO_CENTERED'] = '1' # 화면을 중앙에 배치
         self.SCREEN_WIDTH = 700
-        self.SCREEN_HEIGHT = 800
+        self.SCREEN_HEIGHT = 900
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         pygame.display.set_caption("영어 단어장")
         self.font_large = pygame.font.SysFont("D2Coding", 20)
