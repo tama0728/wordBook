@@ -16,10 +16,13 @@ class BasicWordbookController:
 
     def display_page(self, page):
         filters = self.model.get_filters()
-        word_data = self.search_result if self.search_active else self.model.get_word_data(page, filters)
         if self.search_active:
             total_pages = (len(self.search_result) + self.model.words_per_page - 1) // self.model.words_per_page
+            start_index = (page - 1) * self.model.words_per_page
+            end_index = start_index + self.model.words_per_page
+            word_data = self.search_result[start_index:end_index]
         else:
+            word_data = self.model.get_word_data(page, filters)
             total_pages = self.model.get_total_pages(filters)
         
         if page > total_pages:
