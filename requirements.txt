@@ -1,0 +1,15 @@
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# $ pip install pygame jamo gtts hangul-utils --no-deps
+#gtts
+#hangul-utils
+#jamo
+#pygame
+mysql-connector-python
+mysqlclient
+numpy
+pymysql
+python
+requests
+rsa
+xlrd

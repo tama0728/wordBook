@@ -1,6 +1,0 @@
-pygame
-mysql
-mysql-connector-python
-hashlib
-pandas
-xlrd
