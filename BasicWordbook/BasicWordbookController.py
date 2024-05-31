@@ -25,6 +25,10 @@ class BasicWordbookController:
             word_data = self.model.get_word_data(page, filters)
             total_pages = self.model.get_total_pages(filters)
         
+        if total_pages == 0:
+            total_pages = 1
+            word_data = []
+
         if page > total_pages:
             page = total_pages
         
