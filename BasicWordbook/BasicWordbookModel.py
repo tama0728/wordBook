@@ -22,26 +22,21 @@ class BasicWordbookModel:
             CheckBox("고급", self.view, pygame.Rect(550, 30, 20, 20))
         ]
         self.load_favorite_status()
+        self.conn = mysql.connector.connect(**config)
+        self.cursor = self.conn.cursor()
 
     def load_favorite_status(self):
-        connection = mysql.connector.connect(
-            host=config['host'],
-            port=config['port'],
-            user=config['user'],
-            password=config['password'],
-            database=config['database']
-        )
         try:
-            cursor = connection.cursor()
-            cursor.execute("SELECT word FROM favorite WHERE id = %s", (self.user_id,))
-            favorites = cursor.fetchall()
+            self.cursor = self.conn.cursor()
+            self.cursor.execute("SELECT word FROM favorite WHERE id = %s", (self.user_id,))
+            favorites = self.cursor.fetchall()
             for favorite in favorites:
                 word = favorite[0]
-                cursor.execute("SELECT id FROM words WHERE word = %s", (word,))
-                word_id = cursor.fetchone()[0]
+                self.cursor.execute("SELECT id FROM words WHERE word = %s", (word,))
+                word_id = self.cursor.fetchone()[0]
                 self.favorite_status[word_id] = True
         finally:
-            connection.close()
+            self.conn.close()
 
     def get_total_pages(self, filters):
         connection = mysql.connector.connect(

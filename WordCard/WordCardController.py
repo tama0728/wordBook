@@ -1,7 +1,7 @@
 import pygame
 from gtts import gTTS
 from pygame.locals import *
-import os
+import tempfile
 
 from Api.Popup import Popup
 from WordCard.WordCardModel import WordCardModel
@@ -65,12 +65,15 @@ class WordCardController:
         if self.wordcards:
             current_wordcard = self.wordcards[self.current_card_index]
             tts = gTTS(text=current_wordcard.word, lang='en')
-            file = "temp.mp3"
-            tts.save(file)
-            pygame.mixer.music.load(file)
-            pygame.mixer.music.play()
-            if os.path.isfile(file):
-                os.remove(file)
+            try:
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_file:
+                    temp_path = temp_file.name
+                    tts.save(temp_path)
+                pygame.mixer.music.load(temp_path)
+                pygame.mixer.music.play()
+                os.remove(temp_path)
+            except PermissionError as e:
+                print("")
 
     def toggle_favorite(self):
         current_wordcard = self.wordcards[self.current_card_index]
